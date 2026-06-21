@@ -23,6 +23,7 @@
 - El seed debe leer los Excel directamente mediante `scripts/seed.js`.
 - Mantener nombres de tablas coherentes con el informe y los Excel.
 - Si se cambia el modelo, actualizar `prisma/schema.prisma`, `scripts/seed.js` y `README.md`.
+- MVP actual: `operador_puede_resolver` es permiso unico del usuario. En version definitiva podria moverse a `usuario_operador` para resolver por operador asignado.
 
 ## Verificacion esperada
 

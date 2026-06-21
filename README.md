@@ -77,6 +77,21 @@ Todos los usuarios semilla usan la contraseña `pass123`.
 | Felipe Munoz | `felipe.munoz@egb.local` | Operador inactivo |
 | Sofia Torres | `sofia.multi@egb.local` | Administrador, Autoridad, Operador, Inspector |
 
+Usuarios QA agregados por seed:
+
+| Usuario QA | Correo | Perfil y permisos |
+| --- | --- | --- |
+| Admin Prueba | `admin.prueba@egb.local` | Solo Administrador |
+| Autoridad Prueba | `autoridad.prueba@egb.local` | Solo Autoridad |
+| Inspector Ambos | `inspector.ambos@egb.local` | Inspector con defecto puntual y revision de pauta |
+| Inspector Puntual | `inspector.puntual@egb.local` | Inspector con defecto puntual |
+| Inspector Pauta | `inspector.pauta@egb.local` | Inspector con revision de pauta |
+| Operador Resuelve | `operador.resuelve@egb.local` | Operador STP y Metbus, puede resolver |
+| Operador Consulta | `operador.consulta@egb.local` | Operador Subus, solo consulta |
+| Multiperfil Prueba | `multiperfil.prueba@egb.local` | Administrador, Autoridad, Operador e Inspector |
+
+Nota MVP: `operador_puede_resolver` se mantiene como permiso unico del usuario. En una version definitiva podria pasar a `usuario_operador` para definir resolucion por operador asignado.
+
 ## Alcance actual
 
 Incluye base tecnica, modelo local, seed reproducible y una pantalla inicial que confirma lectura desde SQLite.

@@ -226,6 +226,444 @@ function splitOperators(value) {
     .filter(Boolean);
 }
 
+const QA_USERS = [
+  {
+    id_usuario: "USR-QA-ADM",
+    nombre_completo: "Admin Prueba",
+    correo: "admin.prueba@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "Si",
+    rol_inspector: "No",
+    rol_autoridad: "No",
+    rol_operador: "No",
+    inspector_defecto_puntual: "No",
+    inspector_revision_pauta: "No",
+    operador_operadores_asignados: "",
+    operador_puede_resolver: "No",
+    observaciones: "QA: solo Administrador.",
+  },
+  {
+    id_usuario: "USR-QA-AUT",
+    nombre_completo: "Autoridad Prueba",
+    correo: "autoridad.prueba@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "No",
+    rol_inspector: "No",
+    rol_autoridad: "Si",
+    rol_operador: "No",
+    inspector_defecto_puntual: "No",
+    inspector_revision_pauta: "No",
+    operador_operadores_asignados: "",
+    operador_puede_resolver: "No",
+    observaciones: "QA: solo Autoridad.",
+  },
+  {
+    id_usuario: "USR-QA-INS-AMB",
+    nombre_completo: "Inspector Ambos",
+    correo: "inspector.ambos@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "No",
+    rol_inspector: "Si",
+    rol_autoridad: "No",
+    rol_operador: "No",
+    inspector_defecto_puntual: "Si",
+    inspector_revision_pauta: "Si",
+    operador_operadores_asignados: "",
+    operador_puede_resolver: "No",
+    observaciones: "QA: Inspector con defecto puntual y revision de pauta.",
+  },
+  {
+    id_usuario: "USR-QA-INS-PUN",
+    nombre_completo: "Inspector Puntual",
+    correo: "inspector.puntual@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "No",
+    rol_inspector: "Si",
+    rol_autoridad: "No",
+    rol_operador: "No",
+    inspector_defecto_puntual: "Si",
+    inspector_revision_pauta: "No",
+    operador_operadores_asignados: "",
+    operador_puede_resolver: "No",
+    observaciones: "QA: Inspector solo defecto puntual.",
+  },
+  {
+    id_usuario: "USR-QA-INS-PAU",
+    nombre_completo: "Inspector Pauta",
+    correo: "inspector.pauta@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "No",
+    rol_inspector: "Si",
+    rol_autoridad: "No",
+    rol_operador: "No",
+    inspector_defecto_puntual: "No",
+    inspector_revision_pauta: "Si",
+    operador_operadores_asignados: "",
+    operador_puede_resolver: "No",
+    observaciones: "QA: Inspector solo revision de pauta.",
+  },
+  {
+    id_usuario: "USR-QA-OPE-RES",
+    nombre_completo: "Operador Resuelve",
+    correo: "operador.resuelve@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "No",
+    rol_inspector: "No",
+    rol_autoridad: "No",
+    rol_operador: "Si",
+    inspector_defecto_puntual: "No",
+    inspector_revision_pauta: "No",
+    operador_operadores_asignados: "STP Santiago S.A.; Metbus S.A.",
+    operador_puede_resolver: "Si",
+    observaciones: "QA: Operador asignado a STP y Metbus con permiso de resolver.",
+  },
+  {
+    id_usuario: "USR-QA-OPE-CON",
+    nombre_completo: "Operador Consulta",
+    correo: "operador.consulta@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "No",
+    rol_inspector: "No",
+    rol_autoridad: "No",
+    rol_operador: "Si",
+    inspector_defecto_puntual: "No",
+    inspector_revision_pauta: "No",
+    operador_operadores_asignados: "Subus Chile S.A.",
+    operador_puede_resolver: "No",
+    observaciones: "QA: Operador asignado a Subus sin permiso de resolver.",
+  },
+  {
+    id_usuario: "USR-QA-MULTI",
+    nombre_completo: "Multiperfil Prueba",
+    correo: "multiperfil.prueba@egb.local",
+    contrasena: "pass123",
+    estado: "Activo",
+    rol_administrador: "Si",
+    rol_inspector: "Si",
+    rol_autoridad: "Si",
+    rol_operador: "Si",
+    inspector_defecto_puntual: "Si",
+    inspector_revision_pauta: "Si",
+    operador_operadores_asignados: "STP Santiago S.A.; Metbus S.A.",
+    operador_puede_resolver: "Si",
+    observaciones: "QA: Administrador, Autoridad, Operador e Inspector.",
+  },
+];
+
+const QA_INSPECTIONS = [
+  {
+    id: "INS-QA-AMB-PUNTUAL",
+    fecha: "2024-06-10",
+    hora: "09:00",
+    ppu: "LJXR-34",
+    tipoInspeccion: "Defecto puntual",
+    estado: "Pendiente",
+    inspectorCorreo: "inspector.ambos@egb.local",
+    latitud: "-33.4489",
+    longitud: "-70.6693",
+    ubicacion: "Terminal STP Los Libertadores",
+    failedItemIds: ["RES-009"],
+    fechaLimite: "2024-06-17 18:00",
+    observacion: "QA: puerta de servicio no completa cierre.",
+  },
+  {
+    id: "INS-QA-AMB-PAUTA",
+    fecha: "2024-06-10",
+    hora: "11:30",
+    ppu: "BJFF-23",
+    tipoInspeccion: "Revision de pauta",
+    estado: "Resuelta",
+    inspectorCorreo: "inspector.ambos@egb.local",
+    latitud: "-33.4511",
+    longitud: "-70.6601",
+    ubicacion: "Patio STP El Salto",
+    failedItemIds: ["RES-002", "RES-011"],
+    fechaLimite: "2024-06-14 18:00",
+    operadorResolutorId: "USR-QA-OPE-RES",
+    operadorResolutorNombre: "Operador Resuelve",
+    todosDefectosReparados: "Si",
+    observacion: "QA: revision completa con reparacion cerrada.",
+    observacionOperador: "QA: reparacion verificada por operador.",
+    fechaReparacion: "2024-06-11 16:30",
+  },
+  {
+    id: "INS-QA-PUNTUAL",
+    fecha: "2024-06-11",
+    hora: "10:15",
+    ppu: "CJRX-71",
+    tipoInspeccion: "Defecto puntual",
+    estado: "En revision",
+    inspectorCorreo: "inspector.puntual@egb.local",
+    latitud: "-33.5012",
+    longitud: "-70.6124",
+    ubicacion: "Terminal Metbus Los Libertadores",
+    failedItemIds: ["RES-017"],
+    fechaLimite: "2024-06-18 18:00",
+    observacion: "QA: validador presenta intermitencia.",
+  },
+  {
+    id: "INS-QA-PAUTA",
+    fecha: "2024-06-11",
+    hora: "14:45",
+    ppu: "LPZT90",
+    tipoInspeccion: "Revision de pauta",
+    estado: "Pendiente",
+    inspectorCorreo: "inspector.pauta@egb.local",
+    latitud: "-33.5201",
+    longitud: "-70.7062",
+    ubicacion: "Terminal Subus La Pintana",
+    failedItemIds: ["RES-005", "RES-020"],
+    fechaLimite: "2024-06-15 18:00",
+    observacion: "QA: revision de pauta con defectos criticos pendientes.",
+  },
+];
+
+const CRITICIDAD_RANK = {
+  Baja: 1,
+  Media: 2,
+  Alta: 3,
+};
+
+function mergeRowsByKey(rows, additions, getKey) {
+  for (const addition of additions) {
+    const additionKey = getKey(addition);
+    const index = rows.findIndex((row) => getKey(row) === additionKey);
+    if (index >= 0) {
+      rows[index] = { ...rows[index], ...addition };
+    } else {
+      rows.push(addition);
+    }
+  }
+}
+
+function addOrUpdateQaUsers(usuarios) {
+  mergeRowsByKey(usuarios, QA_USERS, (row) => requiredText(row.correo, "qa.usuario.correo").toLowerCase());
+}
+
+function addQaSeedData({ usuarios, buses, pautaPorBus, pauta, inspecciones, defectos, resultados, notificaciones }) {
+  const busByPpu = new Map(buses.map((bus) => [requiredText(bus.ppu, "qa.bus.ppu"), bus]));
+  const itemById = new Map(pauta.map((item) => [requiredText(item.id_item_pauta, "qa.pauta.id"), item]));
+  const userByEmail = new Map(
+    usuarios.map((usuario) => [requiredText(usuario.correo, "qa.usuario.correo").toLowerCase(), usuario]),
+  );
+
+  const qaInspecciones = [];
+  const qaDefectos = [];
+  const qaResultados = [];
+  const qaNotificaciones = [];
+
+  for (const definition of QA_INSPECTIONS) {
+    const bus = busByPpu.get(definition.ppu);
+    if (!bus) throw new Error(`Bus QA no encontrado: ${definition.ppu}`);
+
+    const inspector = userByEmail.get(definition.inspectorCorreo.toLowerCase());
+    if (!inspector) throw new Error(`Inspector QA no encontrado: ${definition.inspectorCorreo}`);
+
+    const failedItems = definition.failedItemIds.map((itemId) => getPautaItem(itemById, itemId));
+    const criticidadMaxima = getMaxCriticidad(failedItems);
+    const fechaHora = `${definition.fecha} ${definition.hora}`;
+    const isResolved = definition.estado === "Resuelta";
+
+    qaInspecciones.push({
+      id_inspeccion: definition.id,
+      fecha: definition.fecha,
+      hora: definition.hora,
+      fecha_hora: fechaHora,
+      ppu: definition.ppu,
+      operador: requiredText(bus.operador, `qa.bus.operador.${definition.ppu}`),
+      chasis: joinBusParts(bus.chasis_marca, bus.chasis_modelo),
+      carroceria: joinBusParts(bus.carroceria_marca, bus.carroceria_modelo),
+      tecnologia: text(bus.tecnologia) ?? "",
+      tipo_bus: text(bus.tipo_bus) ?? "",
+      anio: text(bus.anio) ?? "",
+      tipo_inspeccion: definition.tipoInspeccion,
+      estado: definition.estado,
+      id_inspector: requiredText(inspector.id_usuario, "qa.inspector.id"),
+      inspector_nombre: requiredText(inspector.nombre_completo, "qa.inspector.nombre"),
+      inspector_correo: requiredText(inspector.correo, "qa.inspector.correo"),
+      latitud: definition.latitud,
+      longitud: definition.longitud,
+      ubicacion_simulada: definition.ubicacion,
+      criticidad_mas_grave: criticidadMaxima,
+      cantidad_defectos: String(failedItems.length),
+      efecto_inspeccion: getEfectoInspeccion(criticidadMaxima),
+      fecha_limite_reparacion: definition.fechaLimite,
+      ultima_actualizacion: isResolved ? definition.fechaReparacion : fechaHora,
+      id_operador_resolutor: definition.operadorResolutorId ?? "",
+      operador_resolutor_nombre: definition.operadorResolutorNombre ?? "",
+      todos_defectos_reparados: definition.todosDefectosReparados ?? "No",
+      observacion_general_inspector: definition.observacion,
+      observacion_general_operador: definition.observacionOperador ?? "",
+    });
+
+    failedItems.forEach((item, index) => {
+      qaDefectos.push({
+        id_detalle: `${definition.id}-DET-${String(index + 1).padStart(2, "0")}`,
+        id_inspeccion: definition.id,
+        ppu: definition.ppu,
+        id_item_pauta: item.id_item_pauta,
+        elemento: item.elemento,
+        item: item.item,
+        atributo: item.atributo,
+        criterio_especifico: item.criterio_especifico,
+        criticidad: item.criticidad,
+        observacion_inspector: getDefectObservation(item, definition),
+        cantidad_adjuntos_inspector: "1",
+        url_foto_inspector: `https://evidencias.egb.local/qa/${definition.id}/${item.id_item_pauta}.jpg`,
+        url_video_inspector: "",
+        defecto_reparado: isResolved ? "Si" : "No",
+        observacion_operador: isResolved ? definition.observacionOperador : "",
+        fecha_marcado_reparado: isResolved ? definition.fechaReparacion : "",
+        estado_defecto: isResolved ? "Reparado" : "Pendiente",
+      });
+    });
+
+    if (definition.tipoInspeccion === "Revision de pauta") {
+      const failedIds = new Set(definition.failedItemIds);
+      for (const itemId of getApplicableItemIds(pautaPorBus, definition.ppu)) {
+        const item = getPautaItem(itemById, itemId);
+        const failed = failedIds.has(itemId);
+        qaResultados.push({
+          id_inspeccion: definition.id,
+          ppu: definition.ppu,
+          id_item_pauta: item.id_item_pauta,
+          elemento: item.elemento,
+          item: item.item,
+          atributo: item.atributo,
+          criterio_especifico: item.criterio_especifico,
+          criticidad: item.criticidad,
+          resultado: failed ? "No cumple" : "Cumple",
+          observacion: failed ? getDefectObservation(item, definition) : "QA: item sin hallazgos.",
+          url_evidencia: failed ? `https://evidencias.egb.local/qa/${definition.id}/${item.id_item_pauta}.jpg` : "",
+        });
+      }
+    }
+
+    qaNotificaciones.push(
+      buildNotification({
+        id: `${definition.id}-NOT-REG`,
+        definition,
+        bus,
+        fechaHora,
+        tipoNotificacion: "Registro",
+        canal: "Interna y correo simulado",
+        asunto: `QA registro inspeccion ${definition.id}`,
+        cuerpo: `Se registro inspeccion QA ${definition.tipoInspeccion} para ${definition.ppu}.`,
+        estado: "Nueva",
+      }),
+    );
+
+    if (criticidadMaxima === "Alta") {
+      qaNotificaciones.push(
+        buildNotification({
+          id: `${definition.id}-NOT-ALTA`,
+          definition,
+          bus,
+          fechaHora,
+          tipoNotificacion: "Alerta criticidad alta",
+          canal: "Pop up y correo simulado",
+          asunto: `QA alerta alta ${definition.ppu}`,
+          cuerpo: `Inspeccion QA ${definition.id} registra criticidad alta.`,
+          estado: "Nueva",
+        }),
+      );
+    }
+
+    if (isResolved) {
+      qaNotificaciones.push(
+        buildNotification({
+          id: `${definition.id}-NOT-REP`,
+          definition,
+          bus,
+          fechaHora: definition.fechaReparacion,
+          tipoNotificacion: "Reparacion completada",
+          canal: "Interna y correo simulado",
+          asunto: `QA reparacion completada ${definition.ppu}`,
+          cuerpo: `El operador marco reparados los defectos QA de ${definition.id}.`,
+          estado: "Revisada",
+        }),
+      );
+    }
+  }
+
+  mergeRowsByKey(inspecciones, qaInspecciones, (row) => requiredText(row.id_inspeccion, "qa.inspeccion.id"));
+  mergeRowsByKey(defectos, qaDefectos, (row) => requiredText(row.id_detalle, "qa.defecto.id"));
+  mergeRowsByKey(
+    resultados,
+    qaResultados,
+    (row) => `${requiredText(row.id_inspeccion, "qa.resultado.inspeccion")}:${requiredText(row.id_item_pauta, "qa.resultado.item")}`,
+  );
+  mergeRowsByKey(notificaciones, qaNotificaciones, (row) => requiredText(row.id_notificacion, "qa.notificacion.id"));
+}
+
+function joinBusParts(...parts) {
+  return parts.map((part) => text(part)).filter(Boolean).join(" ");
+}
+
+function getPautaItem(itemById, itemId) {
+  const item = itemById.get(itemId);
+  if (!item) throw new Error(`Item de pauta QA no encontrado: ${itemId}`);
+  return item;
+}
+
+function getApplicableItemIds(pautaPorBus, ppu) {
+  const itemIds = pautaPorBus
+    .filter((row) => requiredText(row.ppu, "qa.pauta_por_bus.ppu") === ppu && yesNo(row.aplica))
+    .map((row) => requiredText(row.id_item_pauta, "qa.pauta_por_bus.item"));
+
+  if (itemIds.length === 0) {
+    throw new Error(`No hay pauta aplicable QA para ${ppu}`);
+  }
+
+  return itemIds;
+}
+
+function getMaxCriticidad(items) {
+  return items.reduce((current, item) => {
+    const currentRank = CRITICIDAD_RANK[current] ?? 0;
+    const itemRank = CRITICIDAD_RANK[item.criticidad] ?? 0;
+    return itemRank > currentRank ? item.criticidad : current;
+  }, "Baja");
+}
+
+function getEfectoInspeccion(criticidad) {
+  if (criticidad === "Alta") return "Debe generar seguimiento prioritario.";
+  if (criticidad === "Media") return "Debe generar seguimiento programado.";
+  return "Debe quedar disponible para consulta y seguimiento.";
+}
+
+function getDefectObservation(item, definition) {
+  return `${definition.observacion} Item ${item.id_item_pauta}: ${item.elemento} - ${item.item}.`;
+}
+
+function buildNotification({ id, definition, bus, fechaHora, tipoNotificacion, canal, asunto, cuerpo, estado }) {
+  return {
+    id_notificacion: id,
+    fecha_hora: fechaHora,
+    tipo_notificacion: tipoNotificacion,
+    canal,
+    tipo_inspeccion: definition.tipoInspeccion,
+    ppu: definition.ppu,
+    id_inspeccion: definition.id,
+    operador: requiredText(bus.operador, `qa.notificacion.operador.${definition.ppu}`),
+    responsable: requiredText(bus.operador, `qa.notificacion.responsable.${definition.ppu}`),
+    certificador: text(bus.certificador) ?? "",
+    correo_operador_simulado: text(bus.correo_operador_simulado) ?? "",
+    correo_certificador_simulado: text(bus.correo_certificador_simulado) ?? "",
+    correo_autoridad_simulado: text(bus.correo_autoridad_simulado) ?? "",
+    asunto_correo_simulado: asunto,
+    cuerpo_correo_simulado: cuerpo,
+    estado,
+  };
+}
+
 async function main() {
   const usuarios = [
     ...(await readSheet("01_usuarios_permisos_mvp.xlsx", "Usuarios_Permisos")),
@@ -246,6 +684,8 @@ async function main() {
       observaciones: "Usuario multiperfil para probar selector de perfil activo.",
     },
   ];
+  addOrUpdateQaUsers(usuarios);
+
   const operadores = await readSheet("01_usuarios_permisos_mvp.xlsx", "Operadores");
   const buses = await readSheet("02_buses_pauta_aplicable_mvp.xlsx", "Listado_Buses");
   const pautaPorBus = await readSheet("02_buses_pauta_aplicable_mvp.xlsx", "Pauta_por_Bus");
@@ -254,6 +694,8 @@ async function main() {
   const defectos = await readSheet("04_inspecciones_defectos_mvp.xlsx", "Defectos_Detectados");
   const resultados = await readSheet("04_inspecciones_defectos_mvp.xlsx", "Resultados_Pauta");
   const notificaciones = await readSheet("05_notificaciones_mvp.xlsx", "Notificaciones");
+
+  addQaSeedData({ usuarios, buses, pautaPorBus, pauta, inspecciones, defectos, resultados, notificaciones });
 
   await prisma.$transaction([
     prisma.notificacion.deleteMany(),
