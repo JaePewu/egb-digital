@@ -17,8 +17,11 @@ export default async function AppLayout({
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand-block">
-          <span>EGB</span>
-          <strong>Digital</strong>
+          <img src="/assets/logo-bus.png" alt="Logo bus EGB Digital" />
+          <div>
+            <span>EGB Digital</span>
+            <strong>Sistema RED</strong>
+          </div>
         </div>
 
         <nav className="side-nav" aria-label="Navegacion principal">
