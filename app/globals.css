@@ -37,6 +37,215 @@ body {
   padding: 32px 0 48px;
 }
 
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.login-panel {
+  width: min(920px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 32px;
+}
+
+.login-copy h1 {
+  font-size: clamp(34px, 6vw, 54px);
+}
+
+.login-form {
+  display: grid;
+  gap: 16px;
+}
+
+.login-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.login-form input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 13px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.login-form input:focus {
+  outline: 2px solid rgba(31, 138, 112, 0.2);
+  border-color: var(--green);
+}
+
+.login-form button,
+.logout-form button {
+  border: 0;
+  border-radius: 6px;
+  background: var(--green);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+.login-form button {
+  padding: 12px 16px;
+}
+
+.form-error {
+  margin: 0;
+  border: 1px solid #fecdca;
+  border-radius: 6px;
+  background: #fef3f2;
+  color: var(--red);
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-right: 1px solid var(--line);
+  background: #ffffff;
+  padding: 24px 18px;
+}
+
+.brand-block {
+  display: grid;
+  gap: 2px;
+  color: var(--navy);
+}
+
+.brand-block span {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.brand-block strong {
+  font-size: 24px;
+}
+
+.side-nav {
+  display: grid;
+  gap: 6px;
+}
+
+.side-nav a {
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 12px;
+  text-decoration: none;
+}
+
+.side-nav a:hover {
+  background: #eef3f7;
+}
+
+.logout-form {
+  margin-top: auto;
+}
+
+.logout-form button {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--navy);
+}
+
+.content-area {
+  min-width: 0;
+  padding: 24px 32px 48px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+}
+
+.topbar small,
+.scope-note {
+  color: var(--muted);
+}
+
+.user-name {
+  display: block;
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.role-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--green);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.scope-note {
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+
+.module-shell {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding-top: 24px;
+}
+
+.module-header {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.module-header h1 {
+  font-size: clamp(30px, 5vw, 48px);
+}
+
+.placeholder-panel {
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 20px;
+}
+
+.placeholder-panel h2 {
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+.placeholder-panel p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .status-band {
   display: flex;
   align-items: flex-end;
@@ -196,6 +405,20 @@ tr:last-child td {
 }
 
 @media (max-width: 860px) {
+  .login-panel,
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .side-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .status-band,
   .section-heading {
     align-items: flex-start;
@@ -211,6 +434,19 @@ tr:last-child td {
   .page-shell {
     width: min(100% - 20px, 1180px);
     padding-top: 20px;
+  }
+
+  .login-shell,
+  .content-area {
+    padding: 16px;
+  }
+
+  .login-panel {
+    padding: 20px;
+  }
+
+  .side-nav {
+    grid-template-columns: 1fr;
   }
 
   .metrics-grid {

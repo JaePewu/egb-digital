@@ -31,6 +31,13 @@ npm run dev
 
 Abrir: http://localhost:3000
 
+## Login local
+
+- Ruta de ingreso: http://localhost:3000/login
+- Sesion local MVP con cookie HTTP-only firmada.
+- Usuarios inactivos quedan bloqueados.
+- La navegacion se arma segun roles y permisos guardados en SQLite.
+
 ## Datos semilla
 
 La carga inicial usa estos archivos:
