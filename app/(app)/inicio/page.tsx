@@ -1,8 +1,8 @@
-import type { Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { hasRole, getPrimaryRole } from "@/lib/access";
+import { getPrimaryRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getInspectionScopeText, getInspectionWhere } from "@/lib/inspection-access";
 
 export const dynamic = "force-dynamic";
 
@@ -100,7 +100,7 @@ export default async function InicioPage() {
       <section className="recent-section">
         <div className="section-heading">
           <h2>Ultimas inspecciones visibles</h2>
-          <p>{getScopeText(user)}</p>
+          <p>{getInspectionScopeText(user)}</p>
         </div>
         <div className="table-wrap">
           <table>
@@ -135,23 +135,4 @@ export default async function InicioPage() {
       </section>
     </main>
   );
-}
-
-function getInspectionWhere(user: NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>) {
-  if (hasRole(user, "Administrador") || hasRole(user, "Autoridad")) return {};
-  if (hasRole(user, "Inspector")) return { inspectorId: user.id };
-  if (hasRole(user, "Operador")) {
-    const operadorIds = user.operadores.map((operador) => operador.id);
-    return operadorIds.length > 0
-      ? { bus: { operadorId: { in: operadorIds } } }
-      : { id: "__sin_operadores__" };
-  }
-  return { id: "__sin_permisos__" };
-}
-
-function getScopeText(user: NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>) {
-  if (hasRole(user, "Administrador") || hasRole(user, "Autoridad")) return "Vista general.";
-  if (hasRole(user, "Inspector")) return "Solo inspecciones realizadas por el inspector.";
-  if (hasRole(user, "Operador")) return "Solo buses de operadores asignados.";
-  return "Sin datos visibles.";
 }

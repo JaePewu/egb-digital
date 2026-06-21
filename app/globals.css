@@ -246,6 +246,218 @@ body {
   line-height: 1.5;
 }
 
+.filters-panel {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 16px;
+}
+
+.filters-panel label {
+  display: grid;
+  gap: 7px;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.filters-panel input,
+.filters-panel select {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--ink);
+  font: inherit;
+  padding: 10px 11px;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: end;
+  gap: 10px;
+}
+
+.filter-actions button,
+.filter-actions a {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.filter-actions button {
+  border: 0;
+  background: var(--green);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.filter-actions a {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--navy);
+}
+
+.empty-state {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--muted);
+  padding: 20px;
+}
+
+.text-link {
+  color: var(--green);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.disabled-action {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #eef3f7;
+  color: var(--muted);
+  cursor: not-allowed;
+  font: inherit;
+  font-weight: 800;
+  padding: 10px 12px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.detail-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 18px;
+}
+
+.full-panel {
+  margin-top: 16px;
+}
+
+.detail-panel h2 {
+  margin-bottom: 14px;
+  font-size: 20px;
+}
+
+.detail-panel dl,
+.defect-item dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.detail-panel dl div,
+.defect-item dl div {
+  display: grid;
+  gap: 3px;
+}
+
+dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.note-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.note-grid strong {
+  color: var(--navy);
+}
+
+.defect-list {
+  display: grid;
+  gap: 12px;
+}
+
+.defect-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.defect-item header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.defect-item h3 {
+  margin: 0 0 4px;
+  color: var(--navy);
+  font-size: 18px;
+}
+
+.defect-item p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.evidence-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.evidence-links a,
+.evidence-links span {
+  border-radius: 999px;
+  background: #eef3f7;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 7px 10px;
+  text-decoration: none;
+}
+
 .status-band {
   display: flex;
   align-items: flex-end;
@@ -406,8 +618,14 @@ tr:last-child td {
 
 @media (max-width: 860px) {
   .login-panel,
-  .app-shell {
+  .app-shell,
+  .detail-grid,
+  .note-grid {
     grid-template-columns: 1fr;
+  }
+
+  .filters-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sidebar {
@@ -447,6 +665,16 @@ tr:last-child td {
 
   .side-nav {
     grid-template-columns: 1fr;
+  }
+
+  .filters-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-actions,
+  .defect-item header {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .metrics-grid {
