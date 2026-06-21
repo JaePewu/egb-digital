@@ -40,7 +40,23 @@ export default async function AppLayout({
             <span className="user-name">{user.nombreCompleto}</span>
             <small>{user.correo}</small>
           </div>
-          <div className="role-chip">{getPrimaryRole(user)}</div>
+          {user.roles.length > 1 ? (
+            <form className="profile-switcher" action="/api/perfil-activo" method="post">
+              <label>
+                Perfil activo
+                <select name="perfil" defaultValue={user.activeRole}>
+                  {user.roles.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button type="submit">Cambiar</button>
+            </form>
+          ) : (
+            <div className="role-chip">{getPrimaryRole(user)}</div>
+          )}
         </header>
         <p className="scope-note">{getAccessScopeLabel(user)}</p>
         {children}

@@ -207,6 +207,44 @@ body {
   font-weight: 800;
 }
 
+.profile-switcher {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.profile-switcher label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.profile-switcher select {
+  min-width: 160px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--navy);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 8px 10px;
+}
+
+.profile-switcher button {
+  border: 0;
+  border-radius: 6px;
+  background: var(--navy);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 9px 12px;
+}
+
 .scope-note {
   margin: 14px 0 0;
   font-size: 14px;
@@ -672,7 +710,8 @@ tr:last-child td {
   }
 
   .detail-actions,
-  .defect-item header {
+  .defect-item header,
+  .profile-switcher {
     align-items: flex-start;
     flex-direction: column;
   }

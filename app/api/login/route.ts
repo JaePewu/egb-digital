@@ -17,6 +17,6 @@ export async function POST(request: Request) {
   const response = NextResponse.redirect(new URL(getDefaultPathForUser(result.user), request.url), {
     status: 303,
   });
-  setSessionCookie(response, result.user.id);
+  setSessionCookie(response, result.user.id, result.user.activeRole);
   return response;
 }

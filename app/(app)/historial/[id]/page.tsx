@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { canAccessModule, hasRole } from "@/lib/access";
+import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getInspectionWhere } from "@/lib/inspection-access";
@@ -49,7 +49,7 @@ export default async function DetalleInspeccionPage({ params }: DetalleInspeccio
 
   if (!inspeccion) notFound();
 
-  const puedeResolverLuego = hasRole(user, "Operador") && user.permisos.operadorPuedeResolver;
+  const puedeResolverLuego = hasActiveRole(user, "Operador") && user.permisos.operadorPuedeResolver;
 
   return (
     <main className="module-shell">

@@ -6,6 +6,7 @@ export type SessionUser = {
   correo: string;
   estado: string;
   roles: Role[];
+  activeRole: Role;
   permisos: {
     inspectorDefectoPuntual: boolean;
     inspectorRevisionPauta: boolean;
@@ -16,6 +17,8 @@ export type SessionUser = {
     nombre: string;
   }>;
 };
+
+export const rolePriority: Role[] = ["Administrador", "Autoridad", "Operador", "Inspector"];
 
 export type ModuleKey =
   | "inicio"
@@ -90,8 +93,16 @@ export function hasRole(user: SessionUser, role: Role) {
   return user.roles.includes(role);
 }
 
+export function hasActiveRole(user: SessionUser, role: Role) {
+  return user.activeRole === role;
+}
+
 export function getPrimaryRole(user: SessionUser) {
-  return user.roles[0] ?? "Sin rol";
+  return user.activeRole ?? "Sin rol";
+}
+
+export function getDefaultActiveRole(roles: Role[]) {
+  return rolePriority.find((role) => roles.includes(role)) ?? roles[0] ?? "Inspector";
 }
 
 export function canAccessModule(user: SessionUser, moduleKey: ModuleKey) {
@@ -99,20 +110,24 @@ export function canAccessModule(user: SessionUser, moduleKey: ModuleKey) {
     case "inicio":
       return user.roles.length > 0;
     case "defecto-puntual":
-      return hasRole(user, "Inspector") && user.permisos.inspectorDefectoPuntual;
+      return hasActiveRole(user, "Inspector") && user.permisos.inspectorDefectoPuntual;
     case "revision-pauta":
-      return hasRole(user, "Inspector") && user.permisos.inspectorRevisionPauta;
+      return hasActiveRole(user, "Inspector") && user.permisos.inspectorRevisionPauta;
     case "historial":
-      return hasRole(user, "Inspector") || hasRole(user, "Autoridad") || hasRole(user, "Operador");
+      return (
+        hasActiveRole(user, "Inspector") ||
+        hasActiveRole(user, "Autoridad") ||
+        hasActiveRole(user, "Operador")
+      );
     case "notificaciones":
-      return hasRole(user, "Autoridad") || hasRole(user, "Operador");
+      return hasActiveRole(user, "Autoridad") || hasActiveRole(user, "Operador");
     case "reportes":
-      return hasRole(user, "Autoridad") || hasRole(user, "Operador");
+      return hasActiveRole(user, "Autoridad") || hasActiveRole(user, "Operador");
     case "resolver-defectos":
-      return hasRole(user, "Operador") && user.permisos.operadorPuedeResolver;
+      return hasActiveRole(user, "Operador") && user.permisos.operadorPuedeResolver;
     case "administracion":
     case "datos-maestros":
-      return hasRole(user, "Administrador");
+      return hasActiveRole(user, "Administrador");
     default:
       return false;
   }
@@ -121,24 +136,24 @@ export function canAccessModule(user: SessionUser, moduleKey: ModuleKey) {
 export function getNavigationForUser(user: SessionUser) {
   const visibleKeys = new Set<ModuleKey>(["inicio"]);
 
-  if (hasRole(user, "Administrador")) {
+  if (hasActiveRole(user, "Administrador")) {
     visibleKeys.add("administracion");
     visibleKeys.add("datos-maestros");
   }
 
-  if (hasRole(user, "Inspector")) {
+  if (hasActiveRole(user, "Inspector")) {
     if (user.permisos.inspectorDefectoPuntual) visibleKeys.add("defecto-puntual");
     if (user.permisos.inspectorRevisionPauta) visibleKeys.add("revision-pauta");
     visibleKeys.add("historial");
   }
 
-  if (hasRole(user, "Autoridad")) {
+  if (hasActiveRole(user, "Autoridad")) {
     visibleKeys.add("historial");
     visibleKeys.add("notificaciones");
     visibleKeys.add("reportes");
   }
 
-  if (hasRole(user, "Operador")) {
+  if (hasActiveRole(user, "Operador")) {
     visibleKeys.add("historial");
     visibleKeys.add("notificaciones");
     visibleKeys.add("reportes");
@@ -153,9 +168,9 @@ export function getDefaultPathForUser(user: SessionUser) {
 }
 
 export function getAccessScopeLabel(user: SessionUser) {
-  if (hasRole(user, "Administrador")) return "Acceso completo al sistema.";
-  if (hasRole(user, "Autoridad")) return "Acceso general de consulta, notificaciones y reportes.";
-  if (hasRole(user, "Inspector")) return "Acceso a sus inspecciones y registros habilitados.";
-  if (hasRole(user, "Operador")) return "Acceso a operadores asignados y resolucion segun permiso.";
+  if (hasActiveRole(user, "Administrador")) return "Perfil activo: administracion y datos maestros.";
+  if (hasActiveRole(user, "Autoridad")) return "Perfil activo: consulta general, notificaciones y reportes.";
+  if (hasActiveRole(user, "Inspector")) return "Perfil activo: inspecciones propias y registros habilitados.";
+  if (hasActiveRole(user, "Operador")) return "Perfil activo: operadores asignados y reportes.";
   return "Sin permisos asignados.";
 }

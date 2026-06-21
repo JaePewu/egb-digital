@@ -36,7 +36,8 @@ Abrir: http://localhost:3000
 - Ruta de ingreso: http://localhost:3000/login
 - Sesion local MVP con cookie HTTP-only firmada.
 - Usuarios inactivos quedan bloqueados.
-- La navegacion se arma segun roles y permisos guardados en SQLite.
+- La navegacion se arma segun el perfil activo y permisos guardados en SQLite.
+- Si un usuario tiene mas de un perfil, puede cambiar perfil activo sin cerrar sesion.
 
 ## Datos semilla
 
@@ -74,6 +75,7 @@ Todos los usuarios semilla usan la contraseña `pass123`.
 | Carolina Perez | `carolina.perez@egb.local` | Autoridad |
 | Diego Fuentes | `diego.fuentes@egb.local` | Operador |
 | Felipe Munoz | `felipe.munoz@egb.local` | Operador inactivo |
+| Sofia Torres | `sofia.multi@egb.local` | Administrador, Autoridad, Operador, Inspector |
 
 ## Alcance actual
 

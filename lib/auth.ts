@@ -4,13 +4,14 @@ import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import type { Role, SessionUser } from "@/lib/access";
+import { getDefaultActiveRole, type Role, type SessionUser } from "@/lib/access";
 
 const SESSION_COOKIE = "egb_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
 
 type SessionPayload = {
   userId: string;
+  activeRole?: Role;
   issuedAt: number;
 };
 
@@ -57,13 +58,13 @@ export async function getCurrentUser() {
 
   if (!usuario || usuario.estado !== "Activo") return null;
 
-  return toSessionUser(usuario);
+  return toSessionUser(usuario, payload.activeRole);
 }
 
-export function setSessionCookie(response: NextResponse, userId: string) {
+export function setSessionCookie(response: NextResponse, userId: string, activeRole: Role) {
   response.cookies.set({
     name: SESSION_COOKIE,
-    value: createSessionCookie({ userId, issuedAt: Date.now() }),
+    value: createSessionCookie({ userId, activeRole, issuedAt: Date.now() }),
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -84,12 +85,17 @@ export function clearSessionCookie(response: NextResponse) {
   });
 }
 
-function toSessionUser(usuario: Awaited<ReturnType<typeof getUsuarioShape>>) {
+function toSessionUser(usuario: Awaited<ReturnType<typeof getUsuarioShape>>, requestedActiveRole?: Role) {
   const roles: Role[] = [];
   if (usuario.rolAdministrador) roles.push("Administrador");
-  if (usuario.rolInspector) roles.push("Inspector");
   if (usuario.rolAutoridad) roles.push("Autoridad");
   if (usuario.rolOperador) roles.push("Operador");
+  if (usuario.rolInspector) roles.push("Inspector");
+
+  const activeRole =
+    requestedActiveRole && roles.includes(requestedActiveRole)
+      ? requestedActiveRole
+      : getDefaultActiveRole(roles);
 
   return {
     id: usuario.id,
@@ -97,6 +103,7 @@ function toSessionUser(usuario: Awaited<ReturnType<typeof getUsuarioShape>>) {
     correo: usuario.correo,
     estado: usuario.estado,
     roles,
+    activeRole,
     permisos: {
       inspectorDefectoPuntual: usuario.inspectorDefectoPuntual,
       inspectorRevisionPauta: usuario.inspectorRevisionPauta,

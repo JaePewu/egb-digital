@@ -227,7 +227,25 @@ function splitOperators(value) {
 }
 
 async function main() {
-  const usuarios = await readSheet("01_usuarios_permisos_mvp.xlsx", "Usuarios_Permisos");
+  const usuarios = [
+    ...(await readSheet("01_usuarios_permisos_mvp.xlsx", "Usuarios_Permisos")),
+    {
+      id_usuario: "USR-008",
+      nombre_completo: "Sofia Torres",
+      correo: "sofia.multi@egb.local",
+      contrasena: "pass123",
+      estado: "Activo",
+      rol_administrador: "Si",
+      rol_inspector: "Si",
+      rol_autoridad: "Si",
+      rol_operador: "Si",
+      inspector_defecto_puntual: "Si",
+      inspector_revision_pauta: "Si",
+      operador_operadores_asignados: "STP Santiago S.A.; Metbus S.A.",
+      operador_puede_resolver: "Si",
+      observaciones: "Usuario multiperfil para probar selector de perfil activo.",
+    },
+  ];
   const operadores = await readSheet("01_usuarios_permisos_mvp.xlsx", "Operadores");
   const buses = await readSheet("02_buses_pauta_aplicable_mvp.xlsx", "Listado_Buses");
   const pautaPorBus = await readSheet("02_buses_pauta_aplicable_mvp.xlsx", "Pauta_por_Bus");
