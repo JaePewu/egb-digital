@@ -221,9 +221,7 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
                         <td>{item.item}</td>
                         <td>{item.atributo}</td>
                         <td>{item.criterioEspecifico}</td>
-                        <td>
-                          <span className={`severity ${item.criticidad.toLowerCase()}`}>{item.criticidad}</span>
-                        </td>
+                        <td>{item.criticidad}</td>
                       </tr>
                     ))
                   )}
@@ -269,9 +267,7 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
                         <td>{item.id}</td>
                         <td>{item.item}</td>
                         <td>{item.atributo}</td>
-                        <td>
-                          <span className={`severity ${item.criticidad.toLowerCase()}`}>{item.criticidad}</span>
-                        </td>
+                        <td>{item.criticidad}</td>
                         <td>
                           <div className="observation-field">
                             <textarea

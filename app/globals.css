@@ -1355,6 +1355,202 @@ body {
   margin-top: 16px;
 }
 
+.pauta-progress-panel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 12px;
+}
+
+.pauta-progress-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pauta-progress-metrics div {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: #ffffff;
+  padding: 10px;
+}
+
+.pauta-progress-metrics span,
+.pauta-progress-copy span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.pauta-progress-metrics strong {
+  color: #0f172a;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.pauta-progress-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.pauta-progress-copy strong {
+  font-weight: 500;
+}
+
+.pauta-progress-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+
+.pauta-progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-primary);
+  transition: width 0.2s ease;
+}
+
+.pauta-items-scroll {
+  max-height: 560px;
+  display: grid;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.pauta-review-item {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.pauta-review-main {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.pauta-review-number {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pauta-review-copy {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pauta-review-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pauta-review-title span {
+  color: var(--color-primary);
+  font-size: 12px;
+}
+
+.pauta-review-title strong {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pauta-review-copy dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.pauta-review-copy dt {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.pauta-review-copy dd {
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.pauta-review-copy p {
+  margin: 0;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.pauta-review-options {
+  display: flex;
+  gap: 8px;
+}
+
+.pauta-review-options button {
+  min-height: 34px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f2937;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 12px;
+}
+
+.pauta-review-options button:hover {
+  border-color: #bfdbfe;
+  color: var(--color-primary);
+}
+
+.pauta-review-options button.selected {
+  background: transparent;
+  font-weight: 500;
+}
+
+.pauta-review-options button.selected.complies {
+  border-color: #15803d;
+  color: #15803d;
+}
+
+.pauta-review-options button.selected.fails {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.pauta-failure-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  margin-top: 12px;
+  padding-left: 46px;
+}
+
 .filters-panel {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -2006,6 +2202,33 @@ tr:last-child td {
 
   .defect-final-actions {
     flex-direction: column;
+  }
+
+  .pauta-progress-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pauta-progress-copy,
+  .pauta-review-main,
+  .pauta-failure-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .pauta-progress-copy {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pauta-review-copy dl {
+    grid-template-columns: 1fr;
+  }
+
+  .pauta-review-options {
+    flex-wrap: wrap;
+  }
+
+  .pauta-failure-panel {
+    padding-left: 0;
   }
 
   .evidence-actions {
