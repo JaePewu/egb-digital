@@ -137,9 +137,13 @@ export default async function DetalleInspeccionPage({ params, searchParams }: De
             <div>
               <dt>Criticidad</dt>
               <dd>
-                <span className={`severity ${inspeccion.criticidadMasGrave.toLowerCase()}`}>
-                  {inspeccion.criticidadMasGrave}
-                </span>
+                {inspeccion.cantidadDefectos > 0 ? (
+                  <span className={`severity ${inspeccion.criticidadMasGrave.toLowerCase()}`}>
+                    {inspeccion.criticidadMasGrave}
+                  </span>
+                ) : (
+                  <span className="severity-empty">Sin defectos</span>
+                )}
               </dd>
             </div>
             <div>

@@ -59,6 +59,7 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
         operadorNombre: true,
         tipoInspeccion: true,
         criticidadMasGrave: true,
+        cantidadDefectos: true,
         estado: true,
         inspectorId: true,
         inspectorNombre: true,
@@ -188,7 +189,7 @@ function buildWhere(
   if (filters.operador) and.push({ bus: { operadorId: filters.operador } });
   if (filters.inspector) and.push({ inspectorId: filters.inspector });
   if (filters.tipo) and.push({ tipoInspeccion: filters.tipo });
-  if (filters.criticidad) and.push({ criticidadMasGrave: filters.criticidad });
+  if (filters.criticidad) and.push({ criticidadMasGrave: filters.criticidad, cantidadDefectos: { gt: 0 } });
   if (filters.estado) and.push({ estado: filters.estado });
 
   return { AND: and };
@@ -199,6 +200,7 @@ function buildFilterOptions(
     operadorNombre: string;
     tipoInspeccion: string;
     criticidadMasGrave: string;
+    cantidadDefectos: number;
     estado: string;
     inspectorId: string;
     inspectorNombre: string | null;
@@ -217,7 +219,9 @@ function buildFilterOptions(
     ),
     tipos: uniqueOptions(rows.map((row) => ({ value: row.tipoInspeccion, label: row.tipoInspeccion }))),
     criticidades: uniqueOptions(
-      rows.map((row) => ({ value: row.criticidadMasGrave, label: row.criticidadMasGrave })),
+      rows
+        .filter((row) => row.cantidadDefectos > 0)
+        .map((row) => ({ value: row.criticidadMasGrave, label: row.criticidadMasGrave })),
     ),
     estados: uniqueOptions(rows.map((row) => ({ value: row.estado, label: row.estado }))),
   };

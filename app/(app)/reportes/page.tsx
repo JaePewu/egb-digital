@@ -549,7 +549,7 @@ function buildWhere(
   if (filters.hasta) and.push({ fechaHora: { lte: new Date(`${filters.hasta}T23:59:59`) } });
   if (filters.operador) and.push({ bus: { operadorId: filters.operador } });
   if (filters.tipo) and.push({ tipoInspeccion: filters.tipo });
-  if (filters.criticidad) and.push({ criticidadMasGrave: filters.criticidad });
+  if (filters.criticidad) and.push({ criticidadMasGrave: filters.criticidad, cantidadDefectos: { gt: 0 } });
   if (filters.estado === "Resuelta") {
     and.push({ OR: [{ estado: "Resuelta" }, { todosDefectosReparados: true }] });
   }

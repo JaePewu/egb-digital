@@ -49,6 +49,7 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
         <tbody>
           {inspections.map((inspection) => {
             const status = getVisualStatus(inspection);
+            const hasDefects = inspection.cantidadDefectos > 0;
             const severity = inspection.criticidadMasGrave.toLowerCase();
 
             return (
@@ -59,7 +60,11 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
                 <td>{inspection.tipoInspeccion}</td>
                 <td>{inspection.cantidadDefectos}</td>
                 <td>
-                  <span className={`severity ${severity}`}>{inspection.criticidadMasGrave}</span>
+                  {hasDefects ? (
+                    <span className={`severity ${severity}`}>{inspection.criticidadMasGrave}</span>
+                  ) : (
+                    <span className="severity-empty">Sin defectos</span>
+                  )}
                 </td>
                 <td>{inspection.inspectorNombre ?? inspection.inspector?.nombreCompleto ?? "Sin inspector"}</td>
                 <td>
