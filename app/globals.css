@@ -1188,6 +1188,16 @@ body {
   padding: 9px 11px;
 }
 
+.defect-info {
+  margin: 12px 0 0;
+  border: 1px solid #bfdbfe;
+  border-radius: 7px;
+  background: #f8fbff;
+  color: var(--color-primary);
+  font-size: 13px;
+  padding: 9px 11px;
+}
+
 .bus-summary-card {
   display: grid;
   gap: 12px;
@@ -1638,6 +1648,172 @@ body {
   justify-content: space-between;
   gap: 12px;
   margin-top: 18px;
+}
+
+.inspection-detail-page {
+  width: min(1280px, 100%);
+}
+
+.detail-breadcrumb {
+  margin: 0 0 8px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.inspection-detail-page > .defect-card {
+  margin-top: 16px;
+}
+
+.inspection-summary-panel {
+  grid-column: 1 / -1;
+}
+
+.inspection-summary-panel dl {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.inspection-defect-list {
+  display: grid;
+  gap: 12px;
+}
+
+.inspection-defect-card {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.inspection-defect-card header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.inspection-defect-title {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.inspection-defect-title > span {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.inspection-defect-title h3 {
+  margin: 0 0 4px;
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.inspection-defect-title p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.inspection-defect-body,
+.operator-resolution-readonly dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.inspection-defect-body dt,
+.operator-resolution-readonly dt,
+.operator-note {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.inspection-defect-body dd,
+.operator-resolution-readonly dd {
+  margin: 4px 0 0;
+  color: #0f172a;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.operator-resolution-panel,
+.operator-resolution-readonly {
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 12px;
+}
+
+.operator-resolution-panel {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.45fr) minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.operator-resolution-panel h4,
+.operator-resolution-readonly h4 {
+  margin: 0 0 10px;
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.repair-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+  font-size: 13px;
+}
+
+.repair-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: #15803d;
+}
+
+.operator-note {
+  display: grid;
+  gap: 6px;
+}
+
+.operator-note textarea {
+  min-height: 70px;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--color-border);
+  border-radius: 7px;
+  background: #ffffff;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  padding: 9px 10px;
+}
+
+.operator-note textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.detail-bottom-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .disabled-action {
@@ -2239,6 +2415,21 @@ tr:last-child td {
   .defect-item header,
   .profile-switcher {
     align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .inspection-summary-panel dl,
+  .inspection-defect-body,
+  .operator-resolution-panel,
+  .operator-resolution-readonly dl {
+    grid-template-columns: 1fr;
+  }
+
+  .inspection-defect-card header {
+    flex-direction: column;
+  }
+
+  .detail-bottom-actions {
     flex-direction: column;
   }
 
