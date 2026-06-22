@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getDefaultPathForUser } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
+import { LoginMobileMenu } from "./login-mobile-menu";
 import { PasswordField } from "./password-field";
 
 type LoginPageProps = {
@@ -27,6 +28,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
         </div>
         <p>Mejor transporte, mejores ciudades.</p>
+        <LoginMobileMenu />
       </header>
 
       <div className="login-shell">

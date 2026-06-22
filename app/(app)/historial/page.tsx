@@ -5,6 +5,7 @@ import { canAccessModule } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getInspectionScopeText, getInspectionWhere } from "@/lib/inspection-access";
+import { InspectionsTable } from "../_components/inspections-table";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,17 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
           select: {
             operadorId: true,
             operadorNombre: true,
+          },
+        },
+        inspector: {
+          select: {
+            nombreCompleto: true,
+          },
+        },
+        defectos: {
+          select: {
+            defectoReparado: true,
+            estadoDefecto: true,
           },
         },
       },
@@ -140,52 +152,10 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
           <h2>Resultados</h2>
           <p>{inspecciones.length} inspeccion(es)</p>
         </div>
-        {inspecciones.length === 0 ? (
-          <div className="empty-state">No se encontraron inspecciones para los filtros seleccionados.</div>
-        ) : (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>ID inspeccion</th>
-                  <th>Fecha/hora</th>
-                  <th>PPU</th>
-                  <th>Operador</th>
-                  <th>Inspector</th>
-                  <th>Tipo</th>
-                  <th>Criticidad</th>
-                  <th>Defectos</th>
-                  <th>Estado</th>
-                  <th>Accion</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inspecciones.map((inspeccion) => (
-                  <tr key={inspeccion.id}>
-                    <td>{inspeccion.id}</td>
-                    <td>{formatDateTime(inspeccion.fechaHora)}</td>
-                    <td>{inspeccion.ppu}</td>
-                    <td>{inspeccion.bus.operadorNombre}</td>
-                    <td>{inspeccion.inspectorNombre}</td>
-                    <td>{inspeccion.tipoInspeccion}</td>
-                    <td>
-                      <span className={`severity ${inspeccion.criticidadMasGrave.toLowerCase()}`}>
-                        {inspeccion.criticidadMasGrave}
-                      </span>
-                    </td>
-                    <td>{inspeccion.cantidadDefectos}</td>
-                    <td>{inspeccion.estado}</td>
-                    <td>
-                      <Link className="text-link" href={`/historial/${inspeccion.id}`}>
-                        Ver detalle
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <InspectionsTable
+          emptyMessage="No se encontraron inspecciones para los filtros seleccionados."
+          inspections={inspecciones}
+        />
       </section>
     </main>
   );
@@ -257,11 +227,4 @@ function uniqueOptions(options: FilterOption[]) {
   return Array.from(new Map(options.map((option) => [option.value, option])).values()).sort((a, b) =>
     a.label.localeCompare(b.label, "es"),
   );
-}
-
-function formatDateTime(date: Date) {
-  return new Intl.DateTimeFormat("es-CL", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(date);
 }

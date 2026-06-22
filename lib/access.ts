@@ -53,9 +53,9 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     key: "revision-pauta",
-    label: "Revision de pauta",
+    label: "Revisión de pauta",
     href: "/inspecciones/revision-pauta",
-    description: "Placeholder para revision digital de pauta aplicable.",
+    description: "Placeholder para revisión digital de pauta aplicable.",
   },
   {
     key: "historial",
@@ -77,9 +77,9 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     key: "administracion",
-    label: "Administracion",
+    label: "Administración",
     href: "/administracion",
-    description: "Placeholder para usuarios, permisos y auditoria.",
+    description: "Placeholder para usuarios, permisos y auditoría.",
   },
   {
     key: "datos-maestros",
@@ -168,7 +168,7 @@ export function getDefaultPathForUser(user: SessionUser) {
 }
 
 export function getAccessScopeLabel(user: SessionUser) {
-  if (hasActiveRole(user, "Administrador")) return "Perfil activo: administracion y datos maestros.";
+  if (hasActiveRole(user, "Administrador")) return "Perfil activo: administración y datos maestros.";
   if (hasActiveRole(user, "Autoridad")) return "Perfil activo: consulta general, notificaciones y reportes.";
   if (hasActiveRole(user, "Inspector")) return "Perfil activo: inspecciones propias y registros habilitados.";
   if (hasActiveRole(user, "Operador")) return "Perfil activo: operadores asignados y reportes.";

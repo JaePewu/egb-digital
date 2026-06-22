@@ -1,7 +1,9 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getAccessScopeLabel, getNavigationForUser, getPrimaryRole } from "@/lib/access";
+import { getNavigationForUser, getPrimaryRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
+import { MobileMenu } from "./_components/mobile-menu";
+import { ProfileSwitcher } from "./_components/profile-switcher";
+import { SidebarNav } from "./_components/sidebar-nav";
 
 export default async function AppLayout({
   children,
@@ -12,58 +14,64 @@ export default async function AppLayout({
   if (!user) redirect("/login");
 
   const navigation = getNavigationForUser(user);
+  const initials = getInitials(user.nombreCompleto);
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand-block">
+      <header className="institutional-header app-header">
+        <div className="institutional-brand">
           <img src="/assets/logo-bus.png" alt="Logo bus EGB Digital" />
           <div>
-            <span>EGB Digital</span>
-            <strong>Sistema RED</strong>
+            <strong>EGB Digital - Sistema RED</strong>
+            <span>DTPM - Directorio de Transporte Público Metropolitano</span>
           </div>
         </div>
+        <p>Mejor transporte, mejores ciudades.</p>
+        <MobileMenu initials={initials} navigation={navigation} user={user} />
+      </header>
 
-        <nav className="side-nav" aria-label="Navegacion principal">
-          {navigation.map((item) => (
-            <Link href={item.href} key={item.key}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+      <div className="app-body">
+        <aside className="sidebar desktop-sidebar">
+          <SidebarNav navigation={navigation} />
 
-        <form action="/api/logout" method="post" className="logout-form">
-          <button type="submit">Cerrar sesion</button>
-        </form>
-      </aside>
-
-      <div className="content-area">
-        <header className="topbar">
-          <div>
-            <span className="user-name">{user.nombreCompleto}</span>
-            <small>{user.correo}</small>
-          </div>
-          {user.roles.length > 1 ? (
-            <form className="profile-switcher" action="/api/perfil-activo" method="post">
-              <label>
-                Perfil activo
-                <select name="perfil" defaultValue={user.activeRole}>
-                  {user.roles.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button type="submit">Cambiar</button>
+          <div className="sidebar-footer">
+            <div className="sidebar-user">
+              <div className="user-avatar" aria-hidden="true">
+                {initials}
+              </div>
+              <div className="sidebar-user-data">
+                <span className="user-name">{user.nombreCompleto}</span>
+                {user.roles.length > 1 ? (
+                  <ProfileSwitcher activeRole={user.activeRole} roles={user.roles} />
+                ) : (
+                  <div className="profile-pill role-chip">{getPrimaryRole(user)}</div>
+                )}
+              </div>
+            </div>
+            <form action="/api/logout" method="post" className="logout-form">
+              <button type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14 8V5a2 2 0 0 0-2-2H5v18h7a2 2 0 0 0 2-2v-3" />
+                  <path d="M9 12h11" />
+                  <path d="m17 9 3 3-3 3" />
+                </svg>
+                <span>Cerrar Sesión</span>
+              </button>
             </form>
-          ) : (
-            <div className="role-chip">{getPrimaryRole(user)}</div>
-          )}
-        </header>
-        <p className="scope-note">{getAccessScopeLabel(user)}</p>
-        {children}
+          </div>
+        </aside>
+
+        <div className="content-area">{children}</div>
       </div>
     </div>
   );
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
 }
