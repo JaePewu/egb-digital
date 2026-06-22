@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getInspectionTypeLabel } from "@/lib/display-labels";
 
 export type InspectionTableRow = {
   id: string;
@@ -57,7 +58,7 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
                 <td>{formatDateTime(inspection.fechaHora)}</td>
                 <td>{inspection.ppu}</td>
                 <td>{inspection.bus.operadorNombre}</td>
-                <td>{inspection.tipoInspeccion}</td>
+                <td>{getInspectionTypeLabel(inspection.tipoInspeccion)}</td>
                 <td>{inspection.cantidadDefectos}</td>
                 <td>
                   {hasDefects ? (

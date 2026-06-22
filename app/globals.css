@@ -1062,6 +1062,7 @@ body {
 }
 
 .module-header h1 {
+  color: var(--color-primary);
   font-size: 32px;
 }
 

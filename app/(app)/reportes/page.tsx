@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionWhere } from "@/lib/inspection-access";
 
 export const dynamic = "force-dynamic";
@@ -103,7 +104,7 @@ export default async function ReportesPage({ searchParams }: ReportesPageProps) 
   return (
     <main className="module-shell report-page">
       <section className="module-header defect-header">
-        <h1>Reporte</h1>
+        <h1>Reportes</h1>
         <p className="lead">
           {isOperator
             ? "Reporte consolidado de inspecciones y defectos de los operadores asignados."
@@ -135,8 +136,8 @@ export default async function ReportesPage({ searchParams }: ReportesPageProps) 
           Tipo de inspección
           <select name="tipo" defaultValue={filters.tipo}>
             <option value="">Todos</option>
-            <option value="Defecto puntual">Defecto puntual</option>
-            <option value="Revision de pauta">Revisión de pauta</option>
+            <option value="Defecto puntual">{getInspectionTypeLabel("Defecto puntual")}</option>
+            <option value="Revision de pauta">{getInspectionTypeLabel("Revision de pauta")}</option>
           </select>
         </label>
         <label>
@@ -169,15 +170,15 @@ export default async function ReportesPage({ searchParams }: ReportesPageProps) 
       <section className="report-kpis">
         <MetricCard icon="clipboard" label="Inspecciones pendientes" value={formatInteger(report.pendingInspections)} />
         <MetricCard icon="check" label="Inspecciones resueltas" value={formatInteger(report.resolvedInspections)} />
-        <MetricCard icon="warning" label="Defectos pendientes" value={formatInteger(report.pendingDefects)} />
+        <MetricCard icon="warning" label="Defectos totales pendientes" value={formatInteger(report.pendingDefects)} />
         <MetricCard
           accent="danger"
           icon="alert"
-          label="Defectos de criticidad alta"
+          label="Defectos criticidad alta"
           value={formatInteger(report.highDefects)}
         />
         <MetricCard icon="trend" label="Tasa de resolución" value={formatPercent(report.resolvedInspections, report.totalInspections)} />
-        <MetricCard icon="bus" label="Buses con defectos pendientes" value={formatInteger(report.busesWithPendingDefects)} />
+        <MetricCard icon="bus" label="Buses con defectos" value={formatInteger(report.busesWithPendingDefects)} />
       </section>
 
       <section className="report-grid">

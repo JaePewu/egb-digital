@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionScopeText, getInspectionWhere } from "@/lib/inspection-access";
 import { InspectionsTable } from "../_components/inspections-table";
 
@@ -77,8 +78,7 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
   return (
     <main className="module-shell">
       <section className="module-header">
-        <p className="eyebrow">Historial</p>
-        <h1>Inspecciones</h1>
+        <h1>Historial de inspecciones</h1>
         <p className="lead">{getInspectionScopeText(user)}</p>
       </section>
 
@@ -217,7 +217,7 @@ function buildFilterOptions(
         label: row.inspectorNombre ?? row.inspectorId,
       })),
     ),
-    tipos: uniqueOptions(rows.map((row) => ({ value: row.tipoInspeccion, label: row.tipoInspeccion }))),
+    tipos: uniqueOptions(rows.map((row) => ({ value: row.tipoInspeccion, label: getInspectionTypeLabel(row.tipoInspeccion) }))),
     criticidades: uniqueOptions(
       rows
         .filter((row) => row.cantidadDefectos > 0)

@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionWhere } from "@/lib/inspection-access";
 import { saveInspectionResolution } from "./actions";
 
@@ -132,7 +133,7 @@ export default async function DetalleInspeccionPage({ params, searchParams }: De
             </div>
             <div>
               <dt>Tipo</dt>
-              <dd>{inspeccion.tipoInspeccion}</dd>
+              <dd>{getInspectionTypeLabel(inspeccion.tipoInspeccion)}</dd>
             </div>
             <div>
               <dt>Criticidad</dt>

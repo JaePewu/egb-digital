@@ -82,7 +82,7 @@ async function InspectorHome({ user }: { user: SessionUser }) {
   if (user.permisos.inspectorDefectoPuntual) {
     quickAccess.push({
       href: "/inspecciones/defecto-puntual",
-      title: "Defecto puntual",
+      title: "Defectos puntuales",
       description: "Registra defectos detectados en buses de la flota.",
       icon: "plus",
     });
@@ -164,9 +164,9 @@ async function OperationalHome({ user }: { user: SessionUser }) {
 
       <section className="home-metrics-grid" aria-label="Indicadores operativos">
         <MetricCard label="Inspecciones pendientes" value={inspeccionesPendientes} />
-        <MetricCard label="Altas pendientes" value={altasPendientes} />
-        <MetricCard label="Defectos pendientes" value={defectosPendientes} />
-        <MetricCard label="Buses con pendientes" value={busesConPendientes.length} />
+        <MetricCard label="Defectos totales pendientes" value={defectosPendientes} />
+        <MetricCard label="Defectos alta pendientes" value={altasPendientes} />
+        <MetricCard label="Buses con defectos" value={busesConPendientes.length} />
       </section>
 
       <RecentInspectionsTable inspections={recientes} />

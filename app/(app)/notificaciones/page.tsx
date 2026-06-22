@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { markNotificationReviewed } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -142,8 +143,8 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
           Tipo de inspección
           <select name="tipoInspeccion" defaultValue={filters.tipoInspeccion}>
             <option value="">Todos</option>
-            <option value="Defecto puntual">Defectos puntuales</option>
-            <option value="Revision de pauta">Revisión de pauta</option>
+            <option value="Defecto puntual">{getInspectionTypeLabel("Defecto puntual")}</option>
+            <option value="Revision de pauta">{getInspectionTypeLabel("Revision de pauta")}</option>
           </select>
         </label>
         <label>
@@ -491,12 +492,6 @@ function getNotificationTypeLabel(value: string) {
   if (value === "Reparacion completada") return "Reparación completada";
   if (value === "Resolucion actualizada") return "Resolución actualizada";
   return "Registro inspección";
-}
-
-function getInspectionTypeLabel(value: string) {
-  if (value === "Revision de pauta") return "Revisión de pauta";
-  if (value === "Defecto puntual") return "Defecto puntual";
-  return value;
 }
 
 function formatDateTime(date: Date) {

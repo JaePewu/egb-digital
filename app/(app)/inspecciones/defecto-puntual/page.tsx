@@ -48,7 +48,7 @@ export default async function DefectoPuntualPage({ searchParams }: DefectoPuntua
   return (
     <main className="module-shell defect-page">
       <section className="module-header defect-header">
-        <h1>Registrar defectos puntuales</h1>
+        <h1>Defectos puntuales</h1>
         <p className="lead">
           Busque un bus por su PPU y registre uno o más defectos detectados durante la inspección.
         </p>

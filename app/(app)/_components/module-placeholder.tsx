@@ -19,14 +19,13 @@ export async function ModulePlaceholder({ moduleKey, title, children }: ModulePl
   return (
     <main className="module-shell">
       <section className="module-header">
-        <p className="eyebrow">Modulo habilitado</p>
         <h1>{title ?? item?.label}</h1>
         <p className="lead">{item?.description}</p>
       </section>
       <section className="placeholder-panel">
-        <h2>Placeholder Paso 2</h2>
+        <h2>Funcionalidad pendiente</h2>
         <p>
-          La navegacion y proteccion de ruta ya estan activas. La pantalla completa se implementara
+          La navegación y protección de ruta ya están activas. La pantalla completa se implementará
           en los siguientes pasos del MVP.
         </p>
         {children}

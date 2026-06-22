@@ -43,19 +43,19 @@ export const navigationItems: NavigationItem[] = [
     key: "inicio",
     label: "Inicio",
     href: "/inicio",
-    description: "Resumen operativo segun permisos del usuario.",
+    description: "Resumen operativo según permisos del usuario.",
   },
   {
     key: "defecto-puntual",
-    label: "Defecto puntual",
+    label: "Defectos puntuales",
     href: "/inspecciones/defecto-puntual",
-    description: "Placeholder para registro de defectos puntuales.",
+    description: "Registro de defectos puntuales detectados en buses.",
   },
   {
     key: "revision-pauta",
     label: "Revisión de pauta",
     href: "/inspecciones/revision-pauta",
-    description: "Placeholder para revisión digital de pauta aplicable.",
+    description: "Revisión digital de pauta aplicable a buses.",
   },
   {
     key: "historial",
@@ -73,19 +73,19 @@ export const navigationItems: NavigationItem[] = [
     key: "reportes",
     label: "Reportes",
     href: "/reportes",
-    description: "Placeholder para indicadores y reportes.",
+    description: "Indicadores y reportes operativos.",
   },
   {
     key: "administracion",
     label: "Administración",
     href: "/administracion",
-    description: "Placeholder para usuarios, permisos y auditoría.",
+    description: "Gestión de usuarios, permisos y auditoría.",
   },
   {
     key: "datos-maestros",
-    label: "Datos maestros",
+    label: "Datos Maestros",
     href: "/datos-maestros",
-    description: "Placeholder para buses, operadores y pauta.",
+    description: "Gestión de buses, operadores y pauta.",
   },
 ];
 

@@ -49,6 +49,9 @@ export default async function RevisionPautaPage({ searchParams }: RevisionPautaP
     <main className="module-shell defect-page">
       <section className="module-header defect-header">
         <h1>Revisión de pauta</h1>
+        <p className="lead">
+          Busque un bus por su PPU y complete la revisión de los ítems aplicables de la pauta.
+        </p>
       </section>
 
       <RevisionPautaForm bus={bus} error={error} pautaItems={pautaItems} ppu={ppu} />
