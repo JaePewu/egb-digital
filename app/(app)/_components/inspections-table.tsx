@@ -40,7 +40,8 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
             <th>PPU</th>
             <th>Operador</th>
             <th>Tipo de inspección</th>
-            <th>Defectos</th>
+            <th>Defectos totales</th>
+            <th>Defectos pendientes</th>
             <th>Criticidad max</th>
             <th>Inspector</th>
             <th>Estado</th>
@@ -51,6 +52,7 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
           {inspections.map((inspection) => {
             const status = getVisualStatus(inspection);
             const hasDefects = inspection.cantidadDefectos > 0;
+            const pendingDefects = getPendingDefectCount(inspection);
             const severity = inspection.criticidadMasGrave.toLowerCase();
 
             return (
@@ -60,6 +62,7 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
                 <td>{inspection.bus.operadorNombre}</td>
                 <td>{getInspectionTypeLabel(inspection.tipoInspeccion)}</td>
                 <td>{inspection.cantidadDefectos}</td>
+                <td>{pendingDefects}</td>
                 <td>
                   {hasDefects ? (
                     <span className={`severity ${severity}`}>{inspection.criticidadMasGrave}</span>
@@ -83,6 +86,12 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
       </table>
     </div>
   );
+}
+
+function getPendingDefectCount(inspection: InspectionTableRow) {
+  return inspection.defectos.filter(
+    (defect) => !defect.defectoReparado && defect.estadoDefecto !== "Reparado",
+  ).length;
 }
 
 function getVisualStatus(inspection: InspectionTableRow) {

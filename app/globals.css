@@ -1013,7 +1013,7 @@ body {
 }
 
 .home-table-section table {
-  min-width: 1120px;
+  min-width: 1240px;
 }
 
 .section-heading.compact {
@@ -2996,6 +2996,10 @@ table {
   width: 100%;
   min-width: 760px;
   border-collapse: collapse;
+}
+
+.inspections-table {
+  min-width: 1240px;
 }
 
 th,

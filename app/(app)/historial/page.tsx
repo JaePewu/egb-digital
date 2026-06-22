@@ -99,18 +99,7 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
           </select>
         </label>
         <label>
-          Inspector
-          <select name="inspector" defaultValue={filters.inspector}>
-            <option value="">Todos</option>
-            {options.inspectores.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Tipo
+          Tipo de inspección
           <select name="tipo" defaultValue={filters.tipo}>
             <option value="">Todos</option>
             {options.tipos.map((option) => (
@@ -125,6 +114,17 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
           <select name="criticidad" defaultValue={filters.criticidad}>
             <option value="">Todas</option>
             {options.criticidades.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Inspector
+          <select name="inspector" defaultValue={filters.inspector}>
+            <option value="">Todos</option>
+            {options.inspectores.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
