@@ -246,66 +246,70 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
             {selected.length === 0 ? (
               <div className="empty-state">Seleccione uno o más ítems de pauta para registrar defectos.</div>
             ) : (
-              <div className="table-wrap defect-table-wrap">
-                <table className="selected-defects-table">
-                  <thead>
-                    <tr>
-                      <th>N°</th>
-                      <th>ID</th>
-                      <th>Ítem</th>
-                      <th>Atributo</th>
-                      <th>Criticidad</th>
-                      <th>Observación</th>
-                      <th>Evidencia</th>
-                      <th>Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selected.map((item, index) => (
-                      <tr key={item.id}>
-                        <td>{index + 1}</td>
-                        <td>{item.id}</td>
-                        <td>{item.item}</td>
-                        <td>{item.atributo}</td>
-                        <td>{item.criticidad}</td>
-                        <td>
-                          <div className="observation-field">
-                            <textarea
-                              maxLength={200}
-                              onChange={(event) => updateItem(item.id, { observacion: event.target.value })}
-                              placeholder="Agregue una observación..."
-                              value={item.observacion}
-                            />
-                            <span>{item.observacion.length}/200</span>
-                          </div>
-                        </td>
-                        <td>
-                          <div className="evidence-actions">
-                            <button
-                              className={item.foto ? "evidence-active" : ""}
-                              type="button"
-                              onClick={() => updateItem(item.id, { foto: !item.foto })}
-                            >
-                              Agregar foto
-                            </button>
-                            <button
-                              className={item.video ? "evidence-active" : ""}
-                              type="button"
-                              onClick={() => updateItem(item.id, { video: !item.video })}
-                            >
-                              Agregar video
-                            </button>
-                          </div>
-                        </td>
-                        <td>
-                          <button className="link-button danger-link" type="button" onClick={() => removeItem(item.id)}>
-                            Eliminar
+              <div className="selected-defects-list">
+                {selected.map((item, index) => (
+                  <article className="selected-defect-card" key={item.id}>
+                    <header>
+                      <span>{index + 1}</span>
+                      <div>
+                        <h3>{item.item}</h3>
+                        <p>{item.id} · {item.atributo}</p>
+                      </div>
+                      <strong>{item.criticidad}</strong>
+                    </header>
+
+                    <dl className="selected-defect-details">
+                      <div>
+                        <dt>ID</dt>
+                        <dd>{item.id}</dd>
+                      </div>
+                      <div>
+                        <dt>Atributo</dt>
+                        <dd>{item.atributo}</dd>
+                      </div>
+                      <div className="wide">
+                        <dt>Criterio específico</dt>
+                        <dd>{item.criterioEspecifico}</dd>
+                      </div>
+                    </dl>
+
+                    <div className="selected-defect-inputs">
+                      <label className="observation-field">
+                        Observación
+                        <textarea
+                          maxLength={200}
+                          onChange={(event) => updateItem(item.id, { observacion: event.target.value })}
+                          placeholder="Agregue una observación..."
+                          value={item.observacion}
+                        />
+                        <span>{item.observacion.length}/200</span>
+                      </label>
+
+                      <div className="selected-defect-actions">
+                        <span>Evidencia</span>
+                        <div className="evidence-actions">
+                          <button
+                            className={item.foto ? "evidence-active" : ""}
+                            type="button"
+                            onClick={() => updateItem(item.id, { foto: !item.foto })}
+                          >
+                            Agregar foto
                           </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          <button
+                            className={item.video ? "evidence-active" : ""}
+                            type="button"
+                            onClick={() => updateItem(item.id, { video: !item.video })}
+                          >
+                            Agregar video
+                          </button>
+                        </div>
+                        <button className="link-button danger-link" type="button" onClick={() => removeItem(item.id)}>
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
             )}
 
