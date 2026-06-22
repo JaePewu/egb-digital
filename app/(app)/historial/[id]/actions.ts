@@ -94,27 +94,33 @@ export async function saveInspectionResolution(formData: FormData) {
     }
 
     if (changedUpdates.length > 0) {
+      const shouldSendSimulatedEmail = inspeccion.criticidadMasGrave === "Alta";
+
       await tx.notificacion.create({
         data: {
           id: `${inspeccion.id}-NOT-REP-${Date.now()}`,
           fechaHora: now,
           tipoNotificacion: allRepaired ? "Reparacion completada" : "Resolucion actualizada",
-          canal: "Interna y correo simulado",
+          canal: shouldSendSimulatedEmail ? "Interna y correo simulado" : "Interna",
           tipoInspeccion: inspeccion.tipoInspeccion,
           ppu: inspeccion.ppu,
           inspeccionId: inspeccion.id,
           operador: inspeccion.operadorNombre,
           responsable: user.nombreCompleto,
           certificador: inspeccion.bus.certificador,
-          correoOperadorSimulado: inspeccion.bus.correoOperadorSimulado,
-          correoCertificadorSimulado: inspeccion.bus.correoCertificadorSimulado,
-          correoAutoridadSimulado: inspeccion.bus.correoAutoridadSimulado,
-          asuntoCorreoSimulado: allRepaired
-            ? `Reparación completada ${inspeccion.ppu}`
-            : `Resolución actualizada ${inspeccion.ppu}`,
-          cuerpoCorreoSimulado: allRepaired
-            ? `El operador actualizó la resolución de ${changedUpdates.length} defecto(s) y marcó reparada la inspección ${inspeccion.id}.`
-            : `El operador actualizó la resolución de ${changedUpdates.length} defecto(s) de la inspección ${inspeccion.id}.`,
+          correoOperadorSimulado: shouldSendSimulatedEmail ? inspeccion.bus.correoOperadorSimulado : null,
+          correoCertificadorSimulado: shouldSendSimulatedEmail ? inspeccion.bus.correoCertificadorSimulado : null,
+          correoAutoridadSimulado: shouldSendSimulatedEmail ? inspeccion.bus.correoAutoridadSimulado : null,
+          asuntoCorreoSimulado: shouldSendSimulatedEmail
+            ? allRepaired
+              ? `Reparación completada ${inspeccion.ppu}`
+              : `Resolución actualizada ${inspeccion.ppu}`
+            : null,
+          cuerpoCorreoSimulado: shouldSendSimulatedEmail
+            ? allRepaired
+              ? `El operador actualizó la resolución de ${changedUpdates.length} defecto(s) y marcó reparada la inspección ${inspeccion.id}.`
+              : `El operador actualizó la resolución de ${changedUpdates.length} defecto(s) de la inspección ${inspeccion.id}.`
+            : null,
           estado: "Nueva",
         },
       });

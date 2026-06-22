@@ -117,23 +117,27 @@ export async function saveDefectoPuntual(formData: FormData) {
       }),
     });
 
+    const shouldSendSimulatedEmail = maxSeverity === "Alta";
+
     await tx.notificacion.create({
       data: {
         id: `${inspectionId}-NOT-REG`,
         fechaHora: now,
         tipoNotificacion: maxSeverity === "Alta" ? "Alerta criticidad alta" : "Registro",
-        canal: "Interna y correo simulado",
+        canal: shouldSendSimulatedEmail ? "Interna y correo simulado" : "Interna",
         tipoInspeccion: "Defecto puntual",
         ppu: bus.ppu,
         inspeccionId: inspectionId,
         operador: bus.operadorNombre,
         responsable: bus.operadorNombre,
         certificador: bus.certificador,
-        correoOperadorSimulado: bus.correoOperadorSimulado,
-        correoCertificadorSimulado: bus.correoCertificadorSimulado,
-        correoAutoridadSimulado: bus.correoAutoridadSimulado,
-        asuntoCorreoSimulado: `Registro defecto puntual ${bus.ppu}`,
-        cuerpoCorreoSimulado: `Se registró la inspección ${inspectionId} con ${selectedPauta.length} defecto(s).`,
+        correoOperadorSimulado: shouldSendSimulatedEmail ? bus.correoOperadorSimulado : null,
+        correoCertificadorSimulado: shouldSendSimulatedEmail ? bus.correoCertificadorSimulado : null,
+        correoAutoridadSimulado: shouldSendSimulatedEmail ? bus.correoAutoridadSimulado : null,
+        asuntoCorreoSimulado: shouldSendSimulatedEmail ? `Registro defecto puntual ${bus.ppu}` : null,
+        cuerpoCorreoSimulado: shouldSendSimulatedEmail
+          ? `Se registró la inspección ${inspectionId} con ${selectedPauta.length} defecto(s).`
+          : null,
         estado: "Nueva",
       },
     });

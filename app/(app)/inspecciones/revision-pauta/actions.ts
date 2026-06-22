@@ -146,23 +146,27 @@ export async function saveRevisionPauta(formData: FormData) {
       });
     }
 
+    const shouldSendSimulatedEmail = maxSeverity === "Alta";
+
     await tx.notificacion.create({
       data: {
         id: `${inspectionId}-NOT-REG`,
         fechaHora: now,
         tipoNotificacion: hasDefects && maxSeverity === "Alta" ? "Alerta criticidad alta" : "Registro",
-        canal: "Interna y correo simulado",
+        canal: shouldSendSimulatedEmail ? "Interna y correo simulado" : "Interna",
         tipoInspeccion: "Revision de pauta",
         ppu: bus.ppu,
         inspeccionId: inspectionId,
         operador: bus.operadorNombre,
         responsable: bus.operadorNombre,
         certificador: bus.certificador,
-        correoOperadorSimulado: bus.correoOperadorSimulado,
-        correoCertificadorSimulado: bus.correoCertificadorSimulado,
-        correoAutoridadSimulado: bus.correoAutoridadSimulado,
-        asuntoCorreoSimulado: `Registro revisión de pauta ${bus.ppu}`,
-        cuerpoCorreoSimulado: `Se registró la inspección ${inspectionId} con ${failed.length} defecto(s).`,
+        correoOperadorSimulado: shouldSendSimulatedEmail ? bus.correoOperadorSimulado : null,
+        correoCertificadorSimulado: shouldSendSimulatedEmail ? bus.correoCertificadorSimulado : null,
+        correoAutoridadSimulado: shouldSendSimulatedEmail ? bus.correoAutoridadSimulado : null,
+        asuntoCorreoSimulado: shouldSendSimulatedEmail ? `Registro revisión de pauta ${bus.ppu}` : null,
+        cuerpoCorreoSimulado: shouldSendSimulatedEmail
+          ? `Se registró la inspección ${inspectionId} con ${failed.length} defecto(s).`
+          : null,
         estado: "Nueva",
       },
     });
