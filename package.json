@@ -5,10 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
+    "vercel-build": "prisma db push && node scripts/seed.js --if-empty && next build --webpack",
     "start": "next start",
-    "db:push": "node scripts/ensure-sqlite.js && prisma db push",
+    "db:push": "prisma db push",
     "db:seed": "node scripts/seed.js",
-    "db:reset": "node scripts/ensure-sqlite.js && prisma db push --force-reset && node scripts/seed.js",
+    "db:setup": "prisma db push && node scripts/seed.js --if-empty",
+    "db:reset": "prisma db push --force-reset && node scripts/seed.js",
     "prisma:generate": "prisma generate",
     "postinstall": "prisma generate"
   },

@@ -1,20 +1,31 @@
 # EGB Digital MVP
 
-Base tecnica local para validar el MVP de EGB Digital: app web local, SQLite, Prisma y carga inicial desde los Excel entregados.
+MVP web de EGB Digital con Next.js, Prisma, PostgreSQL en Neon y carga inicial desde los Excel entregados.
 
 ## Stack elegido
 
 - Next.js + React + TypeScript para mantener web y lectura de datos en un solo proyecto.
 - Prisma como capa simple de acceso a datos.
-- SQLite local en `prisma/dev.db`.
+- PostgreSQL administrado por Neon.
 - Seed Node leyendo directamente los Excel ubicados en `data/raw`.
 
-## Instalacion
+## Variables de entorno
+
+El proyecto necesita:
+
+```bash
+DATABASE_URL="conexion PostgreSQL agrupada de Neon"
+DATABASE_URL_UNPOOLED="conexion PostgreSQL directa de Neon"
+SESSION_SECRET="secreto largo y privado"
+```
+
+La integracion Neon de Vercel crea las dos variables de base de datos automaticamente.
+
+## Instalacion local
 
 ```bash
 npm install
-npm run db:push
-npm run db:seed
+npm run db:setup
 ```
 
 Para recrear la base desde cero:
@@ -36,8 +47,18 @@ Abrir: http://localhost:3000
 - Ruta de ingreso: http://localhost:3000/login
 - Sesion local MVP con cookie HTTP-only firmada.
 - Usuarios inactivos quedan bloqueados.
-- La navegacion se arma segun el perfil activo y permisos guardados en SQLite.
+- La navegacion se arma segun el perfil activo y permisos guardados en PostgreSQL.
 - Si un usuario tiene mas de un perfil, puede cambiar perfil activo sin cerrar sesion.
+
+## Despliegue en Vercel
+
+Vercel usa automaticamente `npm run vercel-build`. Ese comando:
+
+1. Sincroniza el esquema Prisma con Neon.
+2. Carga los Excel solo cuando la tabla de usuarios esta vacia.
+3. Compila la aplicacion.
+
+Los despliegues posteriores no vuelven a ejecutar el seed si la base ya contiene usuarios.
 
 ## Datos semilla
 
@@ -68,32 +89,17 @@ Todos los usuarios semilla usan la contraseña `pass123`.
 
 | Usuario | Correo | Roles |
 | --- | --- | --- |
-| Ana Martinez | `ana.martinez@egb.local` | Administrador |
-| Juan Rojas | `juan.rojas@egb.local` | Inspector |
-| Camila Perez | `camila.perez@egb.local` | Inspector |
-| Maria Gonzalez | `maria.gonzalez@egb.local` | Operador |
-| Carolina Perez | `carolina.perez@egb.local` | Autoridad |
-| Diego Fuentes | `diego.fuentes@egb.local` | Operador |
-| Felipe Munoz | `felipe.munoz@egb.local` | Operador inactivo |
-| Sofia Torres | `sofia.multi@egb.local` | Administrador, Autoridad, Operador, Inspector |
-
-Usuarios QA agregados por seed:
-
-| Usuario QA | Correo | Perfil y permisos |
-| --- | --- | --- |
-| Admin Prueba | `admin.prueba@egb.local` | Solo Administrador |
-| Autoridad Prueba | `autoridad.prueba@egb.local` | Solo Autoridad |
-| Inspector Ambos | `inspector.ambos@egb.local` | Inspector con defecto puntual y revision de pauta |
-| Inspector Puntual | `inspector.puntual@egb.local` | Inspector con defecto puntual |
-| Inspector Pauta | `inspector.pauta@egb.local` | Inspector con revision de pauta |
-| Operador Resuelve | `operador.resuelve@egb.local` | Operador STP y Metbus, puede resolver |
-| Operador Consulta | `operador.consulta@egb.local` | Operador Subus, solo consulta |
-| Multiperfil Prueba | `multiperfil.prueba@egb.local` | Administrador, Autoridad, Operador e Inspector |
+| Ana Martinez | `ana.martinez@dtpm.cl` | Administrador |
+| Juan Rojas | `juan.rojas@dtpm.cl` | Inspector |
+| Maria Gonzalez | `maria.gonzalez@stp.cl` | Operador |
+| Carolina Perez | `carolina.perez@dtpm.cl` | Autoridad |
+| Felipe Munoz | `felipe.munoz@subuschile.cl` | Operador inactivo |
+| Sofia Torres | `sofia.torres@dtpm.cl` | Administrador, Autoridad, Operador, Inspector |
 
 Nota MVP: `operador_puede_resolver` se mantiene como permiso unico del usuario. En una version definitiva podria pasar a `usuario_operador` para definir resolucion por operador asignado.
 
 ## Alcance actual
 
-Incluye base tecnica, modelo local, seed reproducible y una pantalla inicial que confirma lectura desde SQLite.
+Incluye base tecnica, modelo PostgreSQL, seed reproducible, autenticacion y pantallas del MVP.
 
-No incluye login completo, pantallas finales, carga real de archivos, envio real de correos, Docker ni PostgreSQL.
+No incluye envio real de correos ni almacenamiento definitivo de archivos adjuntos.

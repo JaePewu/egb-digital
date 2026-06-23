@@ -178,7 +178,7 @@ function HomeHero({ user, description }: { user: SessionUser; description: strin
   return (
     <section className="home-hero">
       <p className="eyebrow">Inicio {user.activeRole}</p>
-      <h1>Hola, {user.nombreCompleto}</h1>
+      <h1>Bienvenido, {user.nombreCompleto}</h1>
       <p>{description}</p>
     </section>
   );
