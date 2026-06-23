@@ -1,5 +1,5 @@
 generator client {
-  provider = "postgresql"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,33 +9,33 @@ datasource db {
 }
 
 model Usuario {
-  id                       String            @id @map("id_usuario")
-  nombreCompleto           String            @map("nombre_completo")
-  correo                   String            @unique
-  contrasena               String
-  estado                   String
-  rolAdministrador         Boolean           @default(false) @map("rol_administrador")
-  rolInspector             Boolean           @default(false) @map("rol_inspector")
-  rolAutoridad             Boolean           @default(false) @map("rol_autoridad")
-  rolOperador              Boolean           @default(false) @map("rol_operador")
-  inspectorDefectoPuntual  Boolean           @default(false) @map("inspector_defecto_puntual")
-  inspectorRevisionPauta   Boolean           @default(false) @map("inspector_revision_pauta")
-  operadorPuedeResolver    Boolean           @default(false) @map("operador_puede_resolver")
-  observaciones            String?
-  operadores               UsuarioOperador[]
-  inspeccionesRealizadas   Inspeccion[]      @relation("inspector")
-  inspeccionesResueltas    Inspeccion[]      @relation("operador_resolutor")
+  id                      String            @id @map("id_usuario")
+  nombreCompleto          String            @map("nombre_completo")
+  correo                  String            @unique
+  contrasena              String
+  estado                  String
+  rolAdministrador        Boolean           @default(false) @map("rol_administrador")
+  rolInspector            Boolean           @default(false) @map("rol_inspector")
+  rolAutoridad            Boolean           @default(false) @map("rol_autoridad")
+  rolOperador             Boolean           @default(false) @map("rol_operador")
+  inspectorDefectoPuntual Boolean           @default(false) @map("inspector_defecto_puntual")
+  inspectorRevisionPauta  Boolean           @default(false) @map("inspector_revision_pauta")
+  operadorPuedeResolver   Boolean           @default(false) @map("operador_puede_resolver")
+  observaciones           String?
+  operadores              UsuarioOperador[]
+  inspeccionesRealizadas  Inspeccion[]      @relation("inspector")
+  inspeccionesResueltas   Inspeccion[]      @relation("operador_resolutor")
 
   @@map("usuarios")
 }
 
 model Operador {
-  id        String            @id @map("id_operador")
-  nombre    String            @map("nombre_operador")
-  rut       String?           @map("rut_operador")
-  estado    String
-  buses     Bus[]
-  usuarios  UsuarioOperador[]
+  id       String            @id @map("id_operador")
+  nombre   String            @map("nombre_operador")
+  rut      String?           @map("rut_operador")
+  estado   String
+  buses    Bus[]
+  usuarios UsuarioOperador[]
 
   @@map("operadores")
 }
@@ -51,24 +51,24 @@ model UsuarioOperador {
 }
 
 model Bus {
-  ppu                        String           @id
-  operadorId                 String           @map("id_operador")
-  operadorNombre             String           @map("operador")
-  rutOperador                String?          @map("rut_operador")
-  chasisMarca                String?          @map("chasis_marca")
-  chasisModelo               String?          @map("chasis_modelo")
-  carroceriaMarca            String?          @map("carroceria_marca")
-  carroceriaModelo           String?          @map("carroceria_modelo")
+  ppu                        String             @id
+  operadorId                 String             @map("id_operador")
+  operadorNombre             String             @map("operador")
+  rutOperador                String?            @map("rut_operador")
+  chasisMarca                String?            @map("chasis_marca")
+  chasisModelo               String?            @map("chasis_modelo")
+  carroceriaMarca            String?            @map("carroceria_marca")
+  carroceriaModelo           String?            @map("carroceria_modelo")
   tecnologia                 String?
-  tipoBus                    String?          @map("tipo_bus")
-  anio                       Int?             @map("anio")
-  fechaInicioOperacion       DateTime?        @map("fecha_inicio_operacion")
-  estadoBus                  String           @map("estado_bus")
+  tipoBus                    String?            @map("tipo_bus")
+  anio                       Int?               @map("anio")
+  fechaInicioOperacion       DateTime?          @map("fecha_inicio_operacion")
+  estadoBus                  String             @map("estado_bus")
   certificador               String?
-  correoOperadorSimulado     String?          @map("correo_operador_simulado")
-  correoCertificadorSimulado String?          @map("correo_certificador_simulado")
-  correoAutoridadSimulado    String?          @map("correo_autoridad_simulado")
-  operador                   Operador         @relation(fields: [operadorId], references: [id])
+  correoOperadorSimulado     String?            @map("correo_operador_simulado")
+  correoCertificadorSimulado String?            @map("correo_certificador_simulado")
+  correoAutoridadSimulado    String?            @map("correo_autoridad_simulado")
+  operador                   Operador           @relation(fields: [operadorId], references: [id])
   pautaAplicable             PautaPorBus[]
   inspecciones               Inspeccion[]
   defectos                   DefectoDetectado[]
@@ -79,65 +79,65 @@ model Bus {
 }
 
 model PautaInspeccion {
-  id                    String             @id @map("id_item_pauta")
-  idOriginal            String?            @map("id_original")
-  elemento              String
-  item                  String
-  atributo              String
-  criterioEspecifico    String             @map("criterio_especifico")
-  criticidad            String
-  coberturaInteraccion  String?            @map("cobertura_interaccion")
-  pautaPorBus           PautaPorBus[]
-  defectos              DefectoDetectado[]
-  resultadosPauta       ResultadoPauta[]
+  id                   String             @id @map("id_item_pauta")
+  idOriginal           String?            @map("id_original")
+  elemento             String
+  item                 String
+  atributo             String
+  criterioEspecifico   String             @map("criterio_especifico")
+  criticidad           String
+  coberturaInteraccion String?            @map("cobertura_interaccion")
+  pautaPorBus          PautaPorBus[]
+  defectos             DefectoDetectado[]
+  resultadosPauta      ResultadoPauta[]
 
   @@map("pauta_inspeccion")
 }
 
 model PautaPorBus {
-  ppu          String
-  itemPautaId  String          @map("id_item_pauta")
-  aplica       Boolean
-  bus          Bus             @relation(fields: [ppu], references: [ppu], onDelete: Cascade)
-  pauta        PautaInspeccion @relation(fields: [itemPautaId], references: [id], onDelete: Cascade)
+  ppu         String
+  itemPautaId String          @map("id_item_pauta")
+  aplica      Boolean
+  bus         Bus             @relation(fields: [ppu], references: [ppu], onDelete: Cascade)
+  pauta       PautaInspeccion @relation(fields: [itemPautaId], references: [id], onDelete: Cascade)
 
   @@id([ppu, itemPautaId])
   @@map("pauta_por_bus")
 }
 
 model Inspeccion {
-  id                          String              @id @map("id_inspeccion")
+  id                          String             @id @map("id_inspeccion")
   fecha                       String
   hora                        String
-  fechaHora                   DateTime            @map("fecha_hora")
+  fechaHora                   DateTime           @map("fecha_hora")
   ppu                         String
-  operadorNombre              String              @map("operador")
+  operadorNombre              String             @map("operador")
   chasis                      String?
   carroceria                  String?
   tecnologia                  String?
-  tipoBus                     String?             @map("tipo_bus")
-  anio                        Int?                @map("anio")
-  tipoInspeccion              String              @map("tipo_inspeccion")
+  tipoBus                     String?            @map("tipo_bus")
+  anio                        Int?               @map("anio")
+  tipoInspeccion              String             @map("tipo_inspeccion")
   estado                      String
-  inspectorId                 String              @map("id_inspector")
-  inspectorNombre             String?             @map("inspector_nombre")
-  inspectorCorreo             String?             @map("inspector_correo")
+  inspectorId                 String             @map("id_inspector")
+  inspectorNombre             String?            @map("inspector_nombre")
+  inspectorCorreo             String?            @map("inspector_correo")
   latitud                     Float?
   longitud                    Float?
-  ubicacionSimulada           String?             @map("ubicacion_simulada")
-  criticidadMasGrave          String              @map("criticidad_mas_grave")
-  cantidadDefectos            Int                 @map("cantidad_defectos")
-  efectoInspeccion            String?             @map("efecto_inspeccion")
-  fechaLimiteReparacion       DateTime?           @map("fecha_limite_reparacion")
-  ultimaActualizacion         DateTime?           @map("ultima_actualizacion")
-  operadorResolutorId         String?             @map("id_operador_resolutor")
-  operadorResolutorNombre     String?             @map("operador_resolutor_nombre")
-  todosDefectosReparados      Boolean             @default(false) @map("todos_defectos_reparados")
-  observacionGeneralInspector String?             @map("observacion_general_inspector")
-  observacionGeneralOperador  String?             @map("observacion_general_operador")
-  bus                         Bus                 @relation(fields: [ppu], references: [ppu])
-  inspector                   Usuario             @relation("inspector", fields: [inspectorId], references: [id])
-  operadorResolutor           Usuario?            @relation("operador_resolutor", fields: [operadorResolutorId], references: [id])
+  ubicacionSimulada           String?            @map("ubicacion_simulada")
+  criticidadMasGrave          String             @map("criticidad_mas_grave")
+  cantidadDefectos            Int                @map("cantidad_defectos")
+  efectoInspeccion            String?            @map("efecto_inspeccion")
+  fechaLimiteReparacion       DateTime?          @map("fecha_limite_reparacion")
+  ultimaActualizacion         DateTime?          @map("ultima_actualizacion")
+  operadorResolutorId         String?            @map("id_operador_resolutor")
+  operadorResolutorNombre     String?            @map("operador_resolutor_nombre")
+  todosDefectosReparados      Boolean            @default(false) @map("todos_defectos_reparados")
+  observacionGeneralInspector String?            @map("observacion_general_inspector")
+  observacionGeneralOperador  String?            @map("observacion_general_operador")
+  bus                         Bus                @relation(fields: [ppu], references: [ppu])
+  inspector                   Usuario            @relation("inspector", fields: [inspectorId], references: [id])
+  operadorResolutor           Usuario?           @relation("operador_resolutor", fields: [operadorResolutorId], references: [id])
   defectos                    DefectoDetectado[]
   resultadosPauta             ResultadoPauta[]
   notificaciones              Notificacion[]
@@ -146,70 +146,70 @@ model Inspeccion {
 }
 
 model DefectoDetectado {
-  id                         String           @id @map("id_detalle")
-  inspeccionId               String           @map("id_inspeccion")
-  ppu                        String
-  itemPautaId                String           @map("id_item_pauta")
-  elemento                   String
-  item                       String
-  atributo                   String
-  criterioEspecifico         String           @map("criterio_especifico")
-  criticidad                 String
-  observacionInspector       String?          @map("observacion_inspector")
-  cantidadAdjuntosInspector  Int              @default(0) @map("cantidad_adjuntos_inspector")
-  urlFotoInspector           String?          @map("url_foto_inspector")
-  urlVideoInspector          String?          @map("url_video_inspector")
-  defectoReparado            Boolean          @default(false) @map("defecto_reparado")
-  observacionOperador        String?          @map("observacion_operador")
-  fechaMarcadoReparado       DateTime?        @map("fecha_marcado_reparado")
-  estadoDefecto              String           @map("estado_defecto")
-  inspeccion                 Inspeccion       @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
-  bus                        Bus              @relation(fields: [ppu], references: [ppu])
-  pauta                      PautaInspeccion  @relation(fields: [itemPautaId], references: [id])
+  id                        String          @id @map("id_detalle")
+  inspeccionId              String          @map("id_inspeccion")
+  ppu                       String
+  itemPautaId               String          @map("id_item_pauta")
+  elemento                  String
+  item                      String
+  atributo                  String
+  criterioEspecifico        String          @map("criterio_especifico")
+  criticidad                String
+  observacionInspector      String?         @map("observacion_inspector")
+  cantidadAdjuntosInspector Int             @default(0) @map("cantidad_adjuntos_inspector")
+  urlFotoInspector          String?         @map("url_foto_inspector")
+  urlVideoInspector         String?         @map("url_video_inspector")
+  defectoReparado           Boolean         @default(false) @map("defecto_reparado")
+  observacionOperador       String?         @map("observacion_operador")
+  fechaMarcadoReparado      DateTime?       @map("fecha_marcado_reparado")
+  estadoDefecto             String          @map("estado_defecto")
+  inspeccion                Inspeccion      @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
+  bus                       Bus             @relation(fields: [ppu], references: [ppu])
+  pauta                     PautaInspeccion @relation(fields: [itemPautaId], references: [id])
 
   @@map("defectos_detectados")
 }
 
 model ResultadoPauta {
-  id                  Int              @id @default(autoincrement())
-  inspeccionId        String           @map("id_inspeccion")
-  ppu                 String
-  itemPautaId         String           @map("id_item_pauta")
-  elemento            String
-  item                String
-  atributo            String
-  criterioEspecifico  String           @map("criterio_especifico")
-  criticidad          String
-  resultado           String
-  observacion         String?
-  urlEvidencia        String?          @map("url_evidencia")
-  inspeccion          Inspeccion       @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
-  bus                 Bus              @relation(fields: [ppu], references: [ppu])
-  pauta               PautaInspeccion  @relation(fields: [itemPautaId], references: [id])
+  id                 Int             @id @default(autoincrement())
+  inspeccionId       String          @map("id_inspeccion")
+  ppu                String
+  itemPautaId        String          @map("id_item_pauta")
+  elemento           String
+  item               String
+  atributo           String
+  criterioEspecifico String          @map("criterio_especifico")
+  criticidad         String
+  resultado          String
+  observacion        String?
+  urlEvidencia       String?         @map("url_evidencia")
+  inspeccion         Inspeccion      @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
+  bus                Bus             @relation(fields: [ppu], references: [ppu])
+  pauta              PautaInspeccion @relation(fields: [itemPautaId], references: [id])
 
   @@unique([inspeccionId, itemPautaId])
   @@map("resultados_pauta")
 }
 
 model Notificacion {
-  id                         String      @id @map("id_notificacion")
-  fechaHora                  DateTime    @map("fecha_hora")
-  tipoNotificacion           String      @map("tipo_notificacion")
+  id                         String     @id @map("id_notificacion")
+  fechaHora                  DateTime   @map("fecha_hora")
+  tipoNotificacion           String     @map("tipo_notificacion")
   canal                      String
-  tipoInspeccion             String      @map("tipo_inspeccion")
+  tipoInspeccion             String     @map("tipo_inspeccion")
   ppu                        String
-  inspeccionId               String      @map("id_inspeccion")
+  inspeccionId               String     @map("id_inspeccion")
   operador                   String
   responsable                String?
   certificador               String?
-  correoOperadorSimulado     String?     @map("correo_operador_simulado")
-  correoCertificadorSimulado String?     @map("correo_certificador_simulado")
-  correoAutoridadSimulado    String?     @map("correo_autoridad_simulado")
-  asuntoCorreoSimulado       String?     @map("asunto_correo_simulado")
-  cuerpoCorreoSimulado       String?     @map("cuerpo_correo_simulado")
+  correoOperadorSimulado     String?    @map("correo_operador_simulado")
+  correoCertificadorSimulado String?    @map("correo_certificador_simulado")
+  correoAutoridadSimulado    String?    @map("correo_autoridad_simulado")
+  asuntoCorreoSimulado       String?    @map("asunto_correo_simulado")
+  cuerpoCorreoSimulado       String?    @map("cuerpo_correo_simulado")
   estado                     String
-  bus                        Bus         @relation(fields: [ppu], references: [ppu])
-  inspeccion                 Inspeccion  @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
+  bus                        Bus        @relation(fields: [ppu], references: [ppu])
+  inspeccion                 Inspeccion @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
 
   @@map("notificaciones")
 }
