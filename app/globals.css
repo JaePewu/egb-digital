@@ -1057,13 +1057,19 @@ body {
 }
 
 .module-header {
-  padding: 18px 0;
-  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .module-header h1 {
   color: var(--color-primary);
-  font-size: 32px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.18;
+  margin: 0;
 }
 
 .placeholder-panel {
@@ -1094,7 +1100,6 @@ body {
 }
 
 .defect-header h1 {
-  color: var(--color-primary);
   font-size: 26px;
 }
 
@@ -3013,8 +3018,8 @@ h1 {
 
 .lead {
   max-width: 680px;
-  margin-bottom: 0;
-  color: var(--muted);
+  margin: 0;
+  color: var(--color-muted);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -3416,10 +3421,6 @@ tr:last-child td {
 
   .filters-panel {
     grid-template-columns: 1fr;
-  }
-
-  .defect-header h1 {
-    font-size: 22px;
   }
 
   .defect-card {
