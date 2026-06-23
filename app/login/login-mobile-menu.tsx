@@ -1,14 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AppIcon } from "../(app)/_components/app-icon";
 
 export function LoginMobileMenu() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
     };
   }, [open]);
 
@@ -21,9 +29,7 @@ export function LoginMobileMenu() {
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        <span />
-        <span />
-        <span />
+        <AppIcon name="menu" />
       </button>
 
       {open ? (
@@ -31,12 +37,12 @@ export function LoginMobileMenu() {
           <button className="mobile-drawer-backdrop" type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)} />
           <aside className="mobile-drawer login-mobile-drawer" aria-label="Menú de inicio de sesión">
             <div className="mobile-drawer-header">
-              <span>Menú</span>
+              <div className="mobile-drawer-brand">
+                <img src="/assets/logo-bus.png" alt="" />
+                <span>Menú</span>
+              </div>
               <button type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)}>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
+                <AppIcon name="close" />
               </button>
             </div>
 
@@ -62,6 +68,10 @@ export function LoginMobileMenu() {
                 <span>Soporte</span>
               </button>
             </nav>
+            <div className="security-note">
+              <AppIcon name="shield" />
+              <span>Acceso seguro y confidencial.</span>
+            </div>
           </aside>
         </div>
       ) : null}

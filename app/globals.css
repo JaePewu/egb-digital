@@ -429,16 +429,16 @@ body {
   color: var(--color-primary);
   cursor: pointer;
   flex: 0 0 auto;
-  position: relative;
-  padding: 9px;
+  padding: 8px;
 }
 
-.mobile-menu-trigger span {
-  width: 18px;
-  height: 2px;
-  display: block;
-  border-radius: 999px;
-  background: currentColor;
+.mobile-menu-trigger svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
 }
 
 .mobile-drawer-layer {
@@ -458,17 +458,27 @@ body {
 .mobile-drawer {
   position: absolute;
   top: 0;
-  right: 0;
-  width: min(320px, calc(100vw - 34px));
+  left: 0;
+  width: min(340px, calc(100vw - 32px));
   height: 100dvh;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
   background: #ffffff;
-  box-shadow: -20px 0 50px rgba(15, 23, 42, 0.18);
+  box-shadow: 20px 0 50px rgba(15, 23, 42, 0.18);
   overflow-y: auto;
-  padding: 16px;
+  padding: 16px 14px;
+  animation: drawer-in 180ms ease-out;
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .mobile-drawer-header {
@@ -479,6 +489,20 @@ body {
   color: #111827;
   font-size: 14px;
   font-weight: 800;
+  padding: 0 2px 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-drawer-brand img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .mobile-drawer-header button {
@@ -577,6 +601,7 @@ body {
   gap: 11px;
   width: 100%;
   border: 0;
+  border-left: 3px solid transparent;
   border-radius: 8px;
   background: transparent;
   color: var(--ink);
@@ -606,6 +631,7 @@ body {
 .side-nav a.active,
 .side-nav button.active {
   background: #eff6ff;
+  border-left-color: var(--color-primary);
   color: var(--color-primary);
 }
 
@@ -638,6 +664,28 @@ body {
   gap: 0;
   border-top: 1px solid var(--color-border);
   padding-top: 12px;
+}
+
+.security-note {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  border-top: 1px solid var(--color-border);
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.35;
+  padding: 12px 8px 0;
+}
+
+.security-note svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.9;
 }
 
 .sidebar-user {
@@ -3538,7 +3586,55 @@ tr:last-child td {
   min-width: 1120px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1180px) and (min-width: 901px) {
+  .app-body {
+    grid-template-columns: 232px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding-inline: 10px;
+  }
+
+  .side-nav a,
+  .side-nav button {
+    gap: 9px;
+    font-size: 12px;
+    padding-inline: 10px;
+  }
+
+  .profile-pill,
+  .sidebar-profile-form {
+    width: 132px;
+  }
+
+  .content-area {
+    padding-inline: 20px;
+  }
+
+  .home-metrics-grid,
+  .metrics-grid,
+  .report-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters-panel,
+  .report-filters,
+  .notifications-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .notifications-filter-actions,
+  .report-filter-actions {
+    grid-column: 2 / -1;
+  }
+
+  .admin-toolbar,
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
   .detail-grid,
   .note-grid {
     grid-template-columns: 1fr;
@@ -3617,7 +3713,6 @@ tr:last-child td {
 
   .mobile-menu-trigger {
     display: grid !important;
-    gap: 4px;
     width: 36px;
     height: 36px;
     border-color: #bfdbfe;
@@ -4013,5 +4108,152 @@ tr:last-child td {
 
   .db-pill {
     width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .content-area {
+    padding: 14px 12px 28px;
+  }
+
+  .module-shell {
+    padding-top: 8px;
+  }
+
+  .module-header {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+
+  .home-metrics-grid,
+  .metrics-grid,
+  .report-kpis {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .metric-card,
+  .home-metric-card {
+    min-height: 82px;
+    padding: 12px;
+  }
+
+  .metric-card strong {
+    font-size: 24px;
+  }
+
+  .quick-card {
+    min-height: 96px;
+    padding: 13px;
+  }
+
+  .home-table-section {
+    padding: 12px;
+  }
+
+  .inspections-table,
+  .home-table-section .inspections-table {
+    min-width: 0;
+  }
+
+  .inspections-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .inspections-table tbody,
+  .inspections-table tr,
+  .inspections-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .inspections-table tbody {
+    display: grid;
+    gap: 12px;
+    padding: 0;
+  }
+
+  .inspections-table tr {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  }
+
+  .inspections-table td {
+    min-height: 38px;
+    display: grid;
+    grid-template-columns: minmax(92px, 0.42fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #eef2f7;
+    padding: 9px 11px;
+    overflow-wrap: anywhere;
+  }
+
+  .inspections-table td::before {
+    content: attr(data-label);
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .inspections-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .inspections-table td:last-child .text-link {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: var(--color-primary);
+    color: #ffffff;
+    padding: 8px 12px;
+  }
+
+  .table-wrap {
+    border: 0;
+    background: transparent;
+  }
+
+  .notifications-table-card .table-wrap,
+  .admin-panel .table-wrap,
+  .master-table-wrap.table-wrap,
+  .defect-table-wrap.table-wrap {
+    border: 1px solid var(--color-border);
+    background: #ffffff;
+    scrollbar-color: #93c5fd #eff6ff;
+    scrollbar-width: thin;
+  }
+
+  .notifications-table-card,
+  .admin-panel,
+  .master-panel {
+    padding: 12px;
+  }
+
+  .pauta-items-scroll {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .mobile-drawer {
+    width: min(330px, calc(100vw - 20px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-drawer {
+    animation: none;
   }
 }

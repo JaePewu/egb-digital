@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getNavigationForUser, getPrimaryRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
+import { AppIcon } from "./_components/app-icon";
 import { MobileMenu } from "./_components/mobile-menu";
 import { ProfileSwitcher } from "./_components/profile-switcher";
 import { SidebarNav } from "./_components/sidebar-nav";
@@ -23,7 +24,7 @@ export default async function AppLayout({
           <img src="/assets/logo-bus.png" alt="Logo bus EGB Digital" />
           <div>
             <strong>EGB Digital - Sistema RED</strong>
-            <span>DTPM - Directorio de Transporte Público Metropolitano</span>
+            <span>DTPM - Dirección de Transporte Público Metropolitano</span>
           </div>
         </div>
         <p>Mejor transporte, mejores ciudades.</p>
@@ -50,14 +51,14 @@ export default async function AppLayout({
             </div>
             <form action="/api/logout" method="post" className="logout-form">
               <button type="submit">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M14 8V5a2 2 0 0 0-2-2H5v18h7a2 2 0 0 0 2-2v-3" />
-                  <path d="M9 12h11" />
-                  <path d="m17 9 3 3-3 3" />
-                </svg>
+                <AppIcon name="logout" />
                 <span>Cerrar Sesión</span>
               </button>
             </form>
+            <div className="security-note desktop-security-note">
+              <AppIcon name="shield" />
+              <span>Acceso seguro y confidencial.</span>
+            </div>
           </div>
         </aside>
 

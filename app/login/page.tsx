@@ -24,7 +24,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <img src="/assets/logo-bus.png" alt="Logo bus EGB Digital" />
           <div>
             <strong>EGB Digital - Sistema RED</strong>
-            <span>DTPM - Directorio de Transporte Público Metropolitano</span>
+            <span>DTPM - Dirección de Transporte Público Metropolitano</span>
           </div>
         </div>
         <p>Mejor transporte, mejores ciudades.</p>

@@ -57,24 +57,24 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
 
             return (
               <tr key={inspection.id}>
-                <td>{formatDateTime(inspection.fechaHora)}</td>
-                <td>{inspection.ppu}</td>
-                <td>{inspection.bus.operadorNombre}</td>
-                <td>{getInspectionTypeLabel(inspection.tipoInspeccion)}</td>
-                <td>{inspection.cantidadDefectos}</td>
-                <td>{pendingDefects}</td>
-                <td>
+                <td data-label="Fecha/hora">{formatDateTime(inspection.fechaHora)}</td>
+                <td data-label="PPU">{inspection.ppu}</td>
+                <td data-label="Operador">{inspection.bus.operadorNombre}</td>
+                <td data-label="Tipo">{getInspectionTypeLabel(inspection.tipoInspeccion)}</td>
+                <td data-label="Defectos">{inspection.cantidadDefectos}</td>
+                <td data-label="Pendientes">{pendingDefects}</td>
+                <td data-label="Criticidad">
                   {hasDefects ? (
                     <span className={`severity ${severity}`}>{inspection.criticidadMasGrave}</span>
                   ) : (
                     <span className="severity-empty">Sin defectos</span>
                   )}
                 </td>
-                <td>{inspection.inspectorNombre ?? inspection.inspector?.nombreCompleto ?? "Sin inspector"}</td>
-                <td>
+                <td data-label="Inspector">{inspection.inspectorNombre ?? inspection.inspector?.nombreCompleto ?? "Sin inspector"}</td>
+                <td data-label="Estado">
                   <span className={`status-badge ${status.className}`}>{status.label}</span>
                 </td>
-                <td>
+                <td data-label="Acción">
                   <Link className="text-link" href={`/historial/${inspection.id}`}>
                     Ver detalle
                   </Link>

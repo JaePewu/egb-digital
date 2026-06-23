@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getPrimaryRole, type NavigationItem, type Role, type SessionUser } from "@/lib/access";
+import { AppIcon } from "./app-icon";
 import { ProfileSwitcher } from "./profile-switcher";
 import { SidebarNav } from "./sidebar-nav";
 
@@ -16,8 +17,15 @@ export function MobileMenu({ initials, navigation, user }: MobileMenuProps) {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
     };
   }, [open]);
 
@@ -30,9 +38,7 @@ export function MobileMenu({ initials, navigation, user }: MobileMenuProps) {
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        <span />
-        <span />
-        <span />
+        <AppIcon name="menu" />
       </button>
 
       {open ? (
@@ -40,18 +46,23 @@ export function MobileMenu({ initials, navigation, user }: MobileMenuProps) {
           <button className="mobile-drawer-backdrop" type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)} />
           <aside className="mobile-drawer" aria-label="Menú principal móvil">
             <div className="mobile-drawer-header">
-              <span>Menú</span>
+              <div className="mobile-drawer-brand">
+                <img src="/assets/logo-bus.png" alt="" />
+                <span>Menú principal</span>
+              </div>
               <button type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)}>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
+                <AppIcon name="close" />
               </button>
             </div>
 
             <SidebarNav navigation={navigation} onNavigate={() => setOpen(false)} />
 
             <MobileUserBlock activeRole={user.activeRole} initials={initials} user={user} />
+
+            <div className="security-note">
+              <AppIcon name="shield" />
+              <span>Acceso seguro y confidencial.</span>
+            </div>
           </aside>
         </div>
       ) : null}
@@ -86,11 +97,7 @@ function MobileUserBlock({
       </div>
       <form action="/api/logout" method="post" className="logout-form">
         <button type="submit">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M14 8V5a2 2 0 0 0-2-2H5v18h7a2 2 0 0 0 2-2v-3" />
-            <path d="M9 12h11" />
-            <path d="m17 9 3 3-3 3" />
-          </svg>
+          <AppIcon name="logout" />
           <span>Cerrar Sesión</span>
         </button>
       </form>
