@@ -83,16 +83,16 @@ export const navigationItems: NavigationItem[] = [
     description: "Gestión de usuarios, permisos y auditoría.",
   },
   {
-    key: "logs",
-    label: "Logs de actividades",
-    href: "/logs",
-    description: "Consulta de registros de actividad y auditoría.",
-  },
-  {
     key: "datos-maestros",
     label: "Datos Maestros",
     href: "/datos-maestros",
     description: "Gestión de buses, operadores y pauta.",
+  },
+  {
+    key: "logs",
+    label: "Logs de actividades",
+    href: "/logs",
+    description: "Consulta de registros de actividad y auditoría.",
   },
 ];
 

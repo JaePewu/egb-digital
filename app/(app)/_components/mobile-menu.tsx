@@ -81,13 +81,12 @@ function MobileUserBlock({
 }) {
   return (
     <div className="sidebar-footer mobile-sidebar-footer">
-      <div className="sidebar-user">
+      <div className="sidebar-user account-user-card">
         <div className="user-avatar" aria-hidden="true">
           {initials}
         </div>
         <div className="sidebar-user-data">
-          <span className="user-name">{user.nombreCompleto}</span>
-          <span className="user-email mobile-user-email">{user.correo}</span>
+          <span className="user-system-role">{user.nombreCompleto}</span>
           {user.roles.length > 1 ? (
             <ProfileSwitcher activeRole={activeRole} roles={user.roles} />
           ) : (

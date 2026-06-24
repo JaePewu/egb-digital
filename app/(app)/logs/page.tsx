@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Download } from "lucide-react";
+import { CircleCheck, CircleX, Download, TriangleAlert } from "lucide-react";
 import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
 import {
@@ -147,7 +147,10 @@ export default async function LogsPage({ searchParams }: LogsPageProps) {
                     <td>{log.accion}</td>
                     <td>{log.modulo}</td>
                     <td>
-                      <span className={`log-result ${resultClass(log.resultado)}`}>{log.resultado}</span>
+                      <span className={`log-result ${resultClass(log.resultado)}`}>
+                        <ResultIcon result={log.resultado} />
+                        <span>{log.resultado}</span>
+                      </span>
                     </td>
                     <td>
                       <span>{log.ip ?? "Sin IP"}</span>
@@ -214,6 +217,16 @@ function resultClass(result: string) {
   if (result === "Éxito") return "success";
   if (result === "Advertencia") return "warning";
   return "failure";
+}
+
+function ResultIcon({ result }: { result: string }) {
+  if (result === "Éxito") {
+    return <CircleCheck aria-hidden="true" size={16} strokeWidth={2} />;
+  }
+  if (result === "Advertencia") {
+    return <TriangleAlert aria-hidden="true" size={16} strokeWidth={2} />;
+  }
+  return <CircleX aria-hidden="true" size={16} strokeWidth={2} />;
 }
 
 function truncate(value: string, maxLength: number) {

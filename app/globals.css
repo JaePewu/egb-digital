@@ -540,7 +540,25 @@ body {
 }
 
 .mobile-sidebar-footer {
+  gap: 14px;
+  border-top: 0;
+  padding-top: 0;
   margin-top: auto;
+}
+
+.mobile-sidebar-footer .logout-form {
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0;
+}
+
+.mobile-sidebar-footer .logout-form button {
+  min-height: 52px;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 12px 16px;
 }
 
 .app-body {
@@ -678,7 +696,7 @@ body {
   padding-top: 0;
 }
 
-.desktop-user-card {
+.account-user-card {
   min-height: 96px;
   grid-template-columns: 48px minmax(0, 1fr);
   gap: 14px;
@@ -688,14 +706,14 @@ body {
   padding: 14px 16px;
 }
 
-.desktop-user-card .user-avatar {
+.account-user-card .user-avatar {
   width: 48px;
   height: 48px;
   background: #eef2f7;
   font-size: 18px;
 }
 
-.desktop-user-card .sidebar-user-data {
+.account-user-card .sidebar-user-data {
   justify-items: start;
   gap: 8px;
   text-align: left;
@@ -708,7 +726,7 @@ body {
   line-height: 1.25;
 }
 
-.desktop-user-card .profile-pill {
+.account-user-card .profile-pill {
   width: auto;
   min-width: 76px;
   min-height: 24px;
@@ -719,7 +737,7 @@ body {
   padding: 4px 12px;
 }
 
-.desktop-user-card .sidebar-profile-form {
+.account-user-card .sidebar-profile-form {
   width: auto;
 }
 
@@ -4483,10 +4501,22 @@ tr:last-child td {
 .log-result {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 112px;
+  min-height: 28px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 800;
-  padding: 4px 9px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.log-result svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  stroke: currentColor;
 }
 
 .log-result.success {
