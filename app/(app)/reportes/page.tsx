@@ -410,7 +410,7 @@ function ElementDefectRanking({ items, total }: { items: ElementSeverityItem[]; 
           </div>
           <span className="element-ranking-severity">
             <i className={item.criticidadKey} />
-            {item.criticidad}
+            {getSeverityDisplayLabel(item.criticidad)}
           </span>
           <div className="element-ranking-bar">
             <i style={{ width: `${item.percent}%` }} />
@@ -608,14 +608,18 @@ function buildReport(inspections: InspectionRow[]) {
 function buildSeverityItems(defects: Array<{ criticidad: string }>) {
   const total = defects.length;
   const order = [
-    { key: "baja", label: "Baja" },
-    { key: "media", label: "Media" },
-    { key: "alta", label: "Alta" },
+    { key: "baja", label: "Baja", sourceValue: "Baja" },
+    { key: "media", label: "Mediana", sourceValue: "Media" },
+    { key: "alta", label: "Alta", sourceValue: "Alta" },
   ];
   return order.map((item) => {
-    const value = defects.filter((defect) => defect.criticidad === item.label).length;
-    return { ...item, value, percent: toPercent(value, total) };
+    const value = defects.filter((defect) => defect.criticidad === item.sourceValue).length;
+    return { key: item.key, label: item.label, value, percent: toPercent(value, total) };
   });
+}
+
+function getSeverityDisplayLabel(value: string) {
+  return value === "Media" ? "Mediana" : value;
 }
 
 function buildInspectionStatusItems(pending: number, resolved: number) {

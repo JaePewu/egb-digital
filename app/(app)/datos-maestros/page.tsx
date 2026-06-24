@@ -100,7 +100,7 @@ export default async function DatosMaestrosPage({ searchParams }: DatosMaestrosP
             </label>
           </MasterFilters>
           <TableWrap>
-            <table className="master-table">
+            <table className="master-table buses-master-table">
               <thead>
                 <tr>
                   <th>PPU</th>

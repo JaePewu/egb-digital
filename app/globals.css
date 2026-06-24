@@ -2577,8 +2577,8 @@ body {
 }
 
 .report-page {
-  --report-yellow: var(--severity-low);
-  --report-orange: var(--severity-medium);
+  --report-yellow: #16a34a;
+  --report-orange: #eab308;
   --report-red: var(--severity-high);
   --report-green: #16a34a;
   width: min(1460px, 100%);
@@ -2851,8 +2851,8 @@ body {
 
 .horizontal-ranking-row {
   display: grid;
-  grid-template-columns: minmax(116px, 1.1fr) minmax(82px, 1fr) minmax(68px, auto);
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 7px 10px;
   align-items: center;
   color: #0f172a;
   font-size: 12px;
@@ -2865,6 +2865,7 @@ body {
 }
 
 .horizontal-ranking-row div {
+  grid-column: 1 / -1;
   height: 12px;
   overflow: hidden;
   border-radius: 999px;
@@ -2884,6 +2885,7 @@ body {
   color: #334155;
   font-size: 12px;
   font-weight: 500;
+  text-align: right;
   white-space: nowrap;
 }
 
@@ -3629,7 +3631,7 @@ tr:last-child td {
 }
 
 .master-filters {
-  grid-template-columns: repeat(4, minmax(160px, 1fr)) auto auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 14px;
 }
 
@@ -3947,12 +3949,83 @@ tr:last-child td {
 }
 
 .master-filter-actions {
+  grid-column: 1 / -1;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 10px;
 }
 
+.master-filter-actions a,
+.master-filter-actions button {
+  min-width: 112px;
+}
+
 .master-table-wrap {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: #93c5fd #eff6ff;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
   margin-top: 10px;
+}
+
+.master-table-wrap::-webkit-scrollbar {
+  height: 10px;
+}
+
+.master-table-wrap::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: #eff6ff;
+}
+
+.master-table-wrap::-webkit-scrollbar-thumb {
+  border: 2px solid #eff6ff;
+  border-radius: 999px;
+  background: #93c5fd;
+}
+
+.master-table {
+  table-layout: fixed;
+}
+
+.master-table th,
+.master-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.buses-master-table {
+  min-width: 940px;
+}
+
+.buses-master-table th:nth-child(1) {
+  width: 9%;
+}
+
+.buses-master-table th:nth-child(2) {
+  width: 18%;
+}
+
+.buses-master-table th:nth-child(3),
+.buses-master-table th:nth-child(4) {
+  width: 13%;
+}
+
+.buses-master-table th:nth-child(5) {
+  width: 7%;
+}
+
+.buses-master-table th:nth-child(6),
+.buses-master-table th:nth-child(7) {
+  width: 15%;
+}
+
+.buses-master-table th:nth-child(8) {
+  width: 10%;
 }
 
 .pauta-table {
