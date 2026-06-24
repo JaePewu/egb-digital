@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
+import { SeverityBadge } from "./severity-badge";
 
 export type InspectionTableRow = {
   id: string;
@@ -54,8 +55,6 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
             const status = getVisualStatus(inspection);
             const hasDefects = inspection.cantidadDefectos > 0;
             const pendingDefects = getPendingDefectCount(inspection);
-            const severity = inspection.criticidadMasGrave.toLowerCase();
-
             return (
               <tr key={inspection.id}>
                 <td data-label="Fecha/hora">{formatDateTime(inspection.fechaHora)}</td>
@@ -66,7 +65,7 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
                 <td data-label="Pendientes">{pendingDefects}</td>
                 <td data-label="Criticidad">
                   {hasDefects ? (
-                    <span className={`severity ${severity}`}>{inspection.criticidadMasGrave}</span>
+                    <SeverityBadge value={inspection.criticidadMasGrave} />
                   ) : (
                     <span className="severity-empty">Sin defectos</span>
                   )}

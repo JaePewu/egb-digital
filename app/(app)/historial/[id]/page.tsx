@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { SeverityBadge } from "../../_components/severity-badge";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionWhere } from "@/lib/inspection-access";
 import { saveInspectionResolution } from "./actions";
@@ -139,9 +140,7 @@ export default async function DetalleInspeccionPage({ params, searchParams }: De
               <dt>Criticidad</dt>
               <dd>
                 {inspeccion.cantidadDefectos > 0 ? (
-                  <span className={`severity ${inspeccion.criticidadMasGrave.toLowerCase()}`}>
-                    {inspeccion.criticidadMasGrave}
-                  </span>
+                  <SeverityBadge value={inspeccion.criticidadMasGrave} />
                 ) : (
                   <span className="severity-empty">Sin defectos</span>
                 )}
@@ -203,7 +202,7 @@ export default async function DetalleInspeccionPage({ params, searchParams }: De
                           <p>{defecto.elemento} · {defecto.atributo}</p>
                         </div>
                       </div>
-                      <span className={`severity ${defecto.criticidad.toLowerCase()}`}>{defecto.criticidad}</span>
+                      <SeverityBadge value={defecto.criticidad} />
                     </header>
 
                     <div className="inspection-defect-body">

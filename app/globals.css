@@ -1042,7 +1042,8 @@ body {
 }
 
 .home-hero {
-  padding: 10px 12px 0;
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px 12px 18px;
 }
 
 .home-hero h1 {
@@ -1183,6 +1184,11 @@ body {
   display: grid;
   gap: 16px;
   padding: 0 12px;
+}
+
+.home-section.admin-dashboard-panel {
+  gap: 20px;
+  padding: 20px;
 }
 
 .home-section .section-heading h2 {
@@ -3492,6 +3498,57 @@ tr:last-child td {
   text-align: center;
 }
 
+.severity-indicator {
+  display: inline-grid;
+  grid-template-columns: 18px 94px;
+  align-items: center;
+  gap: 8px;
+  width: 120px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.severity-indicator > svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.severity-indicator > span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+
+.severity-indicator.alta {
+  color: #dc2626;
+}
+
+.severity-indicator.alta > span {
+  background: #fee2e2;
+}
+
+.severity-indicator.media {
+  color: #d97706;
+}
+
+.severity-indicator.media > span {
+  background: #fef3c7;
+}
+
+.severity-indicator.baja {
+  color: #16a34a;
+}
+
+.severity-indicator.baja > span {
+  background: #dcfce7;
+}
+
 .admin-page,
 .master-page {
   width: min(1320px, 100%);
@@ -4853,7 +4910,8 @@ textarea:focus-visible {
 }
 
 @media (max-width: 620px) {
-  .admin-dashboard-panel {
+  .home-section.admin-dashboard-panel {
+    gap: 16px;
     padding: 14px;
   }
 

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { SeverityBadge } from "../_components/severity-badge";
 
 export const dynamic = "force-dynamic";
 
@@ -211,7 +212,7 @@ export default async function DatosMaestrosPage({ searchParams }: DatosMaestrosP
                     <td>{item.item}</td>
                     <td>{item.atributo}</td>
                     <td>{item.criterioEspecifico}</td>
-                    <td><span className={`severity ${item.criticidad.toLowerCase()}`}>{item.criticidad}</span></td>
+                    <td><SeverityBadge value={item.criticidad} /></td>
                   </tr>
                 ))}
               </tbody>
