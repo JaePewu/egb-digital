@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
+import { activityActorFromUser, buildActivityData } from "@/lib/activity-log";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
@@ -18,6 +19,19 @@ export async function saveUserAdministration(formData: FormData) {
     .getAll("operadores")
     .map((value) => String(value))
     .filter(Boolean);
+  const targetUser = await prisma.usuario.findUnique({
+    where: { id: usuarioId },
+    select: { nombreCompleto: true, correo: true },
+  });
+  if (!targetUser) redirect("/administracion");
+
+  const auditData = await buildActivityData({
+    actor: activityActorFromUser(currentUser),
+    accion: "Modificación de usuario, permisos y asignaciones",
+    modulo: "Administración",
+    resultado: "Éxito",
+    detalle: `Usuario actualizado: ${targetUser.nombreCompleto} (${targetUser.correo}). Operadores asignados: ${operadores.length}.`,
+  });
 
   await prisma.$transaction(async (tx) => {
     await tx.usuario.update({
@@ -43,6 +57,8 @@ export async function saveUserAdministration(formData: FormData) {
         },
       });
     }
+
+    await tx.logActividad.create({ data: auditData });
   });
 
   redirect(returnTo);

@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
+import { activityActorFromUser, buildActivityData } from "@/lib/activity-log";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getInspectionWhere } from "@/lib/inspection-access";
@@ -63,6 +64,13 @@ export async function saveInspectionResolution(formData: FormData) {
   if (changedUpdates.length === 0 && !inspectionNeedsUpdate) {
     redirect(`/historial/${inspeccion.id}?sinCambios=1`);
   }
+  const auditData = await buildActivityData({
+    actor: activityActorFromUser(user),
+    accion: allRepaired ? "Reparación de defectos completada" : "Actualización de defectos",
+    modulo: "Resolución de defectos",
+    resultado: "Éxito",
+    detalle: `Inspección ${inspeccion.id}, PPU ${inspeccion.ppu}, ${changedUpdates.length} defecto(s) actualizado(s), estado ${nextInspectionState}.`,
+  });
 
   await prisma.$transaction(async (tx) => {
     for (const update of changedUpdates) {
@@ -125,6 +133,8 @@ export async function saveInspectionResolution(formData: FormData) {
         },
       });
     }
+
+    await tx.logActividad.create({ data: auditData });
   });
 
   redirect(`/historial/${inspeccion.id}`);

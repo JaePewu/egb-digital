@@ -29,6 +29,7 @@ export type ModuleKey =
   | "reportes"
   | "resolver-defectos"
   | "administracion"
+  | "logs"
   | "datos-maestros";
 
 export type NavigationItem = {
@@ -82,6 +83,12 @@ export const navigationItems: NavigationItem[] = [
     description: "Gestión de usuarios, permisos y auditoría.",
   },
   {
+    key: "logs",
+    label: "Logs de actividades",
+    href: "/logs",
+    description: "Consulta de registros de actividad y auditoría.",
+  },
+  {
     key: "datos-maestros",
     label: "Datos Maestros",
     href: "/datos-maestros",
@@ -126,6 +133,7 @@ export function canAccessModule(user: SessionUser, moduleKey: ModuleKey) {
     case "resolver-defectos":
       return hasActiveRole(user, "Operador") && user.permisos.operadorPuedeResolver;
     case "administracion":
+    case "logs":
     case "datos-maestros":
       return hasActiveRole(user, "Administrador");
     default:
@@ -138,6 +146,7 @@ export function getNavigationForUser(user: SessionUser) {
 
   if (hasActiveRole(user, "Administrador")) {
     visibleKeys.add("administracion");
+    visibleKeys.add("logs");
     visibleKeys.add("datos-maestros");
   }
 

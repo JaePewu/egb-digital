@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
+import { activityActorFromUser, buildActivityData } from "@/lib/activity-log";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
@@ -59,6 +60,13 @@ export async function saveDefectoPuntual(formData: FormData) {
   const maxSeverity = selectedPauta.reduce((current, { pauta }) => {
     return (severityRank[pauta.criticidad] ?? 0) > (severityRank[current] ?? 0) ? pauta.criticidad : current;
   }, "Baja");
+  const auditData = await buildActivityData({
+    actor: activityActorFromUser(user),
+    accion: "Registro de defecto puntual",
+    modulo: "Inspecciones",
+    resultado: "Éxito",
+    detalle: `Inspección ${inspectionId}, PPU ${bus.ppu}, ${selectedPauta.length} defecto(s), criticidad máxima ${maxSeverity}.`,
+  });
 
   await prisma.$transaction(async (tx) => {
     await tx.inspeccion.create({
@@ -141,6 +149,8 @@ export async function saveDefectoPuntual(formData: FormData) {
         estado: "Nueva",
       },
     });
+
+    await tx.logActividad.create({ data: auditData });
   });
 
   redirect(`/historial/${inspectionId}`);

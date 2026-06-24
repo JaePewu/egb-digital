@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
+import { activityActorFromUser, buildActivityData } from "@/lib/activity-log";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
@@ -66,6 +67,13 @@ export async function saveRevisionPauta(formData: FormData) {
     return (severityRank[pauta.criticidad] ?? 0) > (severityRank[current] ?? 0) ? pauta.criticidad : current;
   }, "Baja");
   const hasDefects = failed.length > 0;
+  const auditData = await buildActivityData({
+    actor: activityActorFromUser(user),
+    accion: "Registro de revisión de pauta",
+    modulo: "Inspecciones",
+    resultado: "Éxito",
+    detalle: `Inspección ${inspectionId}, PPU ${bus.ppu}, ${reviewedPauta.length} ítem(s) revisados y ${failed.length} defecto(s).`,
+  });
 
   await prisma.$transaction(async (tx) => {
     await tx.inspeccion.create({
@@ -170,6 +178,8 @@ export async function saveRevisionPauta(formData: FormData) {
         estado: "Nueva",
       },
     });
+
+    await tx.logActividad.create({ data: auditData });
   });
 
   redirect(`/historial/${inspectionId}`);

@@ -25,8 +25,33 @@ model Usuario {
   operadores              UsuarioOperador[]
   inspeccionesRealizadas  Inspeccion[]      @relation("inspector")
   inspeccionesResueltas   Inspeccion[]      @relation("operador_resolutor")
+  logsActividad           LogActividad[]
 
   @@map("usuarios")
+}
+
+model LogActividad {
+  id            String   @id @default(cuid())
+  fechaHora     DateTime @default(now()) @map("fecha_hora")
+  usuarioId     String?  @map("id_usuario")
+  usuarioNombre String   @map("usuario_nombre")
+  usuarioCorreo String   @map("usuario_correo")
+  perfil        String
+  accion        String
+  modulo        String
+  resultado     String
+  detalle       String?
+  ip            String?
+  dispositivo   String?
+  usuario       Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+
+  @@index([fechaHora])
+  @@index([usuarioId])
+  @@index([perfil])
+  @@index([accion])
+  @@index([modulo])
+  @@index([resultado])
+  @@map("logs_actividad")
 }
 
 model Operador {

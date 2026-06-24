@@ -9,6 +9,7 @@ import {
   Database,
   History,
   House,
+  ScrollText,
   SquareCheckBig,
   UserRoundPlus,
   type LucideIcon,
@@ -51,6 +52,7 @@ const navigationIcons: Record<ModuleKey, LucideIcon> = {
   reportes: BarChart3,
   "resolver-defectos": SquareCheckBig,
   administracion: UserRoundPlus,
+  logs: ScrollText,
   "datos-maestros": Database,
 };
 
