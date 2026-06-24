@@ -332,6 +332,20 @@ body {
   color: #8b95a1;
 }
 
+.login-form input:-webkit-autofill,
+.login-form input:-webkit-autofill:hover,
+.login-form input:-webkit-autofill:focus,
+.login-form input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--color-text);
+  caret-color: var(--color-text);
+  box-shadow: 0 0 0 1000px var(--color-background) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.login-form input::selection {
+  background: rgba(30, 64, 175, 0.18);
+}
+
 .login-submit,
 .logout-form button {
   border: 0;
@@ -4140,7 +4154,7 @@ tr:last-child td {
     width: 100%;
     min-height: 50px;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 36px;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 8px;
     padding: 7px 10px;
@@ -4177,6 +4191,22 @@ tr:last-child td {
   }
 
   .institutional-header > p {
+    grid-column: 2;
+    display: grid;
+    min-width: 92px;
+    max-width: 112px;
+    min-height: 30px;
+    align-content: center;
+    gap: 0;
+    border-left-width: 2px;
+    font-size: 10px;
+    line-height: 1.1;
+    padding: 1px 0 1px 8px;
+    margin-right: 2px;
+    white-space: normal;
+  }
+
+  .institutional-header > p::before {
     display: none;
   }
 
@@ -5280,6 +5310,36 @@ textarea:focus-visible {
 
   .admin-metrics-grid .home-metric-card:last-child {
     grid-column: auto;
+  }
+}
+
+
+@media (max-width: 460px) {
+  .institutional-header > p {
+    min-width: 82px;
+    max-width: 96px;
+    font-size: 9px;
+    padding-left: 7px;
+  }
+
+  .institutional-brand strong {
+    font-size: 11px;
+  }
+
+  .institutional-brand span {
+    font-size: 8.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .institutional-header > p {
+    min-width: 76px;
+    max-width: 82px;
+    font-size: 8.5px;
+  }
+
+  .institutional-brand span {
+    display: none;
   }
 }
 
