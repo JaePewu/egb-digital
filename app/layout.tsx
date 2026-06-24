@@ -4,11 +4,6 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "EGB Digital - Sistema RED",
   description: "Plataforma digital de inspección de buses del Sistema RED",
-  icons: {
-    icon: "/assets/logo-bus.png",
-    shortcut: "/assets/logo-bus.png",
-    apple: "/assets/logo-bus.png",
-  },
 };
 
 export default function RootLayout({
