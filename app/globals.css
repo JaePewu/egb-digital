@@ -139,17 +139,23 @@ body {
 
 .institutional-header > p {
   position: relative;
-  display: flex;
-  align-items: center;
+  display: grid;
+  align-content: center;
+  gap: 2px;
   min-height: 34px;
+  min-width: 225px;
   max-width: 260px;
   margin: 0;
-  border-left: 2px solid #ef1f23;
+  border-left: 3px solid #ef1f23;
   color: #111827;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.35;
-  padding-left: 14px;
+  font-size: 14px;
+  line-height: 1.22;
+  padding: 2px 0 2px 16px;
+}
+
+.institutional-slogan strong {
+  display: block;
+  font-weight: 700;
 }
 
 .institutional-header > p::before {

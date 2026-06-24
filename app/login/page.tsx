@@ -27,7 +27,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <span>DTPM - Dirección de Transporte Público Metropolitano</span>
           </div>
         </div>
-        <p>Mejor transporte, mejores ciudades.</p>
+        <p className="institutional-slogan">
+          <strong>Mejor transporte,</strong>
+          <strong>mejores ciudades.</strong>
+        </p>
         <LoginMobileMenu />
       </header>
 
