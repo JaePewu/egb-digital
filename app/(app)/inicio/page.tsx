@@ -8,6 +8,7 @@ import {
   Clock3,
   Database,
   Plus,
+  ScrollText,
   ShieldCheck,
   UserRound,
   UserRoundPlus,
@@ -26,7 +27,7 @@ type QuickAccessItem = {
   href: string;
   title: string;
   description: string;
-  icon: "admin" | "data" | "plus" | "checklist";
+  icon: "admin" | "data" | "logs" | "plus" | "checklist";
 };
 
 const unresolvedStates = ["Resuelta", "Cerrada", "Cerrado"];
@@ -59,17 +60,20 @@ async function AdminHome({ user }: { user: SessionUser }) {
     <main className="home-shell">
       <HomeHero user={user} description="Gestiona usuarios, permisos y datos maestros del MVP local." />
 
-      <section className="home-metrics-grid" aria-label="Indicadores administracion">
-        <MetricCard icon="users" label="Usuarios activos" value={usuariosActivos} />
-        <MetricCard icon="admin" label="Administradores" value={administradores} />
-        <MetricCard icon="authority" label="Autoridades" value={autoridades} />
-        <MetricCard icon="inspector" label="Inspectores" value={inspectores} />
-        <MetricCard icon="operator" label="Operadores" value={operadores} />
+      <section className="home-section admin-dashboard-panel">
+        <SectionHeading title="Indicadores clave" />
+        <div className="home-metrics-grid admin-metrics-grid" aria-label="Indicadores administracion">
+          <MetricCard icon="users" label="Usuarios activos" value={usuariosActivos} />
+          <MetricCard icon="admin" label="Administradores" value={administradores} />
+          <MetricCard icon="authority" label="Autoridades" value={autoridades} />
+          <MetricCard icon="inspector" label="Inspectores" value={inspectores} />
+          <MetricCard icon="operator" label="Operadores" value={operadores} />
+        </div>
       </section>
 
-      <section className="home-section">
+      <section className="home-section admin-dashboard-panel">
         <SectionHeading title="Accesos rápidos" />
-        <div className="quick-grid two">
+        <div className="quick-grid admin-quick-grid">
           <QuickAccessCard
             href="/administracion"
             title="Administración"
@@ -81,6 +85,12 @@ async function AdminHome({ user }: { user: SessionUser }) {
             title="Datos maestros"
             description="Buses, operadores y pauta de inspección."
             icon="data"
+          />
+          <QuickAccessCard
+            href="/logs"
+            title="Logs de actividades"
+            description="Consulta el historial de acciones y auditoría del sistema."
+            icon="logs"
           />
         </div>
       </section>
@@ -200,7 +210,7 @@ type HomeMetricIcon = "users" | "admin" | "authority" | "inspector" | "operator"
 
 function MetricCard({ icon, label, value }: { icon: HomeMetricIcon; label: string; value: number }) {
   return (
-    <article className="metric-card home-metric-card">
+    <article className={`metric-card home-metric-card home-metric-${icon}`}>
       <span className="home-metric-icon" aria-hidden="true">
         <HomeMetricIcon type={icon} />
       </span>
@@ -252,7 +262,7 @@ function QuickAccessCard({
   href: string;
   title: string;
   description: string;
-  icon: "admin" | "data" | "plus" | "checklist";
+  icon: "admin" | "data" | "logs" | "plus" | "checklist";
 }) {
   return (
     <Link className="quick-card" href={href}>
@@ -290,12 +300,14 @@ function RecentInspectionsTable({
   );
 }
 
-function QuickIcon({ type }: { type: "admin" | "data" | "plus" | "checklist" }) {
+function QuickIcon({ type }: { type: "admin" | "data" | "logs" | "plus" | "checklist" }) {
   switch (type) {
     case "admin":
       return <UserRoundPlus aria-hidden="true" size={20} strokeWidth={2} />;
     case "data":
       return <Database aria-hidden="true" size={20} strokeWidth={2} />;
+    case "logs":
+      return <ScrollText aria-hidden="true" size={20} strokeWidth={2} />;
     case "plus":
       return <Plus aria-hidden="true" size={20} strokeWidth={2} />;
     case "checklist":
