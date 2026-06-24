@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Eye } from "lucide-react";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
 
 export type InspectionTableRow = {
@@ -76,6 +77,7 @@ export function InspectionsTable({ emptyMessage, inspections }: InspectionsTable
                 </td>
                 <td data-label="Acción">
                   <Link className="text-link" href={`/historial/${inspection.id}`}>
+                    <Eye aria-hidden="true" size={16} strokeWidth={2} />
                     Ver detalle
                   </Link>
                 </td>

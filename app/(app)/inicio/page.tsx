@@ -1,6 +1,18 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
-import { ChevronRight, ClipboardCheck, Database, Plus, UserRoundPlus } from "lucide-react";
+import {
+  BusFront,
+  ChevronRight,
+  CircleAlert,
+  ClipboardCheck,
+  Clock3,
+  Database,
+  Plus,
+  ShieldCheck,
+  UserRound,
+  UserRoundPlus,
+  UsersRound,
+} from "lucide-react";
 import { redirect } from "next/navigation";
 import { hasActiveRole, type SessionUser } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
@@ -48,11 +60,11 @@ async function AdminHome({ user }: { user: SessionUser }) {
       <HomeHero user={user} description="Gestiona usuarios, permisos y datos maestros del MVP local." />
 
       <section className="home-metrics-grid" aria-label="Indicadores administracion">
-        <MetricCard label="Usuarios activos" value={usuariosActivos} />
-        <MetricCard label="Administradores" value={administradores} />
-        <MetricCard label="Autoridades" value={autoridades} />
-        <MetricCard label="Inspectores" value={inspectores} />
-        <MetricCard label="Operadores" value={operadores} />
+        <MetricCard icon="users" label="Usuarios activos" value={usuariosActivos} />
+        <MetricCard icon="admin" label="Administradores" value={administradores} />
+        <MetricCard icon="authority" label="Autoridades" value={autoridades} />
+        <MetricCard icon="inspector" label="Inspectores" value={inspectores} />
+        <MetricCard icon="operator" label="Operadores" value={operadores} />
       </section>
 
       <section className="home-section">
@@ -164,10 +176,10 @@ async function OperationalHome({ user }: { user: SessionUser }) {
       />
 
       <section className="home-metrics-grid" aria-label="Indicadores operativos">
-        <MetricCard label="Inspecciones pendientes" value={inspeccionesPendientes} />
-        <MetricCard label="Defectos totales pendientes" value={defectosPendientes} />
-        <MetricCard label="Defectos alta pendientes" value={altasPendientes} />
-        <MetricCard label="Buses con defectos" value={busesConPendientes.length} />
+        <MetricCard icon="pending" label="Inspecciones pendientes" value={inspeccionesPendientes} />
+        <MetricCard icon="defects" label="Defectos totales pendientes" value={defectosPendientes} />
+        <MetricCard icon="high" label="Defectos alta pendientes" value={altasPendientes} />
+        <MetricCard icon="bus" label="Buses con defectos" value={busesConPendientes.length} />
       </section>
 
       <RecentInspectionsTable inspections={recientes} />
@@ -184,13 +196,43 @@ function HomeHero({ user, description }: { user: SessionUser; description: strin
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: number }) {
+type HomeMetricIcon = "users" | "admin" | "authority" | "inspector" | "operator" | "pending" | "defects" | "high" | "bus";
+
+function MetricCard({ icon, label, value }: { icon: HomeMetricIcon; label: string; value: number }) {
   return (
     <article className="metric-card home-metric-card">
-      <span>{label}</span>
-      <strong>{value}</strong>
+      <span className="home-metric-icon" aria-hidden="true">
+        <HomeMetricIcon type={icon} />
+      </span>
+      <div>
+        <span>{label}</span>
+        <strong>{value}</strong>
+      </div>
     </article>
   );
+}
+
+function HomeMetricIcon({ type }: { type: HomeMetricIcon }) {
+  switch (type) {
+    case "users":
+      return <UsersRound aria-hidden="true" size={20} strokeWidth={2} />;
+    case "admin":
+      return <UserRoundPlus aria-hidden="true" size={20} strokeWidth={2} />;
+    case "authority":
+      return <ShieldCheck aria-hidden="true" size={20} strokeWidth={2} />;
+    case "inspector":
+      return <ClipboardCheck aria-hidden="true" size={20} strokeWidth={2} />;
+    case "operator":
+      return <UserRound aria-hidden="true" size={20} strokeWidth={2} />;
+    case "pending":
+      return <Clock3 aria-hidden="true" size={20} strokeWidth={2} />;
+    case "defects":
+      return <CircleAlert aria-hidden="true" size={20} strokeWidth={2} />;
+    case "high":
+      return <CircleAlert aria-hidden="true" size={20} strokeWidth={2} />;
+    case "bus":
+      return <BusFront aria-hidden="true" size={20} strokeWidth={2} />;
+  }
 }
 
 function SectionHeading({ title }: { title: string }) {

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
+import { Eye } from "lucide-react";
 import { redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
@@ -227,6 +228,7 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
                     </td>
                     <td>
                       <Link className="text-link notification-detail-link" href={buildHref(filters, { notificacion: notificacion.id })}>
+                        <Eye aria-hidden="true" size={16} strokeWidth={2} />
                         Ver detalle
                       </Link>
                     </td>
@@ -286,7 +288,10 @@ function NotificationModal({
     <div className="notification-modal-backdrop">
       <section className="notification-modal" role="dialog" aria-modal="true" aria-labelledby="notification-title">
         <header>
-          <h2 id="notification-title">Detalle de notificación</h2>
+          <h2 id="notification-title">
+            Detalle de notificación
+            <Eye aria-hidden="true" size={20} strokeWidth={2} />
+          </h2>
           <Link href={closeHref} aria-label="Cerrar detalle">
             ×
           </Link>

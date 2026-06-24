@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
+import { Eye } from "lucide-react";
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
@@ -134,6 +135,7 @@ export default async function AdministracionPage({ searchParams }: Administracio
                       <td><RoleMark active={item.rolOperador} /></td>
                       <td>
                         <Link className="text-link" href={buildHref(filters, { usuario: item.id })}>
+                          <Eye aria-hidden="true" size={16} strokeWidth={2} />
                           Ver detalle
                         </Link>
                       </td>

@@ -1068,7 +1068,31 @@ body {
 
 .home-metric-card {
   min-height: 92px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+}
+
+.home-metric-card > div {
+  min-width: 0;
+}
+
+.home-metric-icon {
+  width: 42px;
+  height: 42px;
+  display: grid !important;
+  place-items: center;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: var(--color-primary) !important;
+}
+
+.home-metric-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
 }
 
 .home-section {
@@ -1883,9 +1907,16 @@ body {
 }
 
 .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: var(--green);
   font-weight: 500;
   text-decoration: none;
+}
+
+.text-link svg {
+  flex: 0 0 auto;
 }
 
 .text-link:hover {
@@ -2261,7 +2292,14 @@ body {
 }
 
 .notification-modal h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 20px;
+}
+
+.notification-modal h2 svg {
+  flex: 0 0 auto;
 }
 
 .notification-modal h3 {
@@ -2531,6 +2569,7 @@ body {
 }
 
 .report-panel {
+  min-width: 0;
   min-height: 260px;
   padding: 16px 18px;
 }
@@ -2669,6 +2708,7 @@ body {
 }
 
 .horizontal-ranking-row strong {
+  min-width: 0;
   color: #334155;
   font-size: 12px;
   font-weight: 500;
@@ -2720,6 +2760,7 @@ body {
 }
 
 .element-ranking {
+  min-width: 0;
   display: grid;
   gap: 12px;
 }
@@ -2886,6 +2927,7 @@ body {
 }
 
 .trend-chart {
+  min-width: 0;
   display: grid;
   gap: 10px;
 }
@@ -2918,7 +2960,9 @@ body {
 }
 
 .trend-chart svg {
+  display: block;
   width: 100%;
+  height: auto;
   min-height: 238px;
   overflow: visible;
   padding-bottom: 4px;
@@ -3731,6 +3775,16 @@ tr:last-child td {
   .admin-toolbar,
   .admin-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1400px) and (min-width: 901px) {
+  .report-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .report-panel.wide {
+    grid-column: span 2;
   }
 }
 
