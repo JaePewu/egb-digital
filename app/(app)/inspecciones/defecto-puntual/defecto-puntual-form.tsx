@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { saveDefectoPuntual } from "./actions";
 
@@ -120,7 +121,7 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
             placeholder="Ingrese PPU (ej. ABCD12)"
           />
           <button type="submit">
-            <SearchIcon />
+            <Search aria-hidden="true" size={20} strokeWidth={2} />
             <span>Buscar bus</span>
           </button>
         </form>
@@ -380,13 +381,4 @@ function normalize(value: string) {
 
 function joinParts(...parts: Array<string | null>) {
   return parts.filter(Boolean).join(" ") || "Sin dato";
-}
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="m21 21-4.3-4.3" />
-      <path d="M10.5 18a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15Z" />
-    </svg>
-  );
 }

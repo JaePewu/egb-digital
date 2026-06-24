@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Check, ChevronDown, ClipboardCheck, ShieldCheck, UserRound, UserRoundPlus } from "lucide-react";
 import type { Role } from "@/lib/access";
 
 type ProfileSwitcherProps = {
@@ -31,7 +32,7 @@ export function ProfileSwitcher({ activeRole, roles }: ProfileSwitcherProps) {
         onClick={() => setOpen((current) => !current)}
       >
         <span>{activeRole}</span>
-        <ChevronIcon />
+        <ChevronDown aria-hidden="true" size={20} strokeWidth={2} />
       </button>
 
       {open ? (
@@ -56,7 +57,7 @@ export function ProfileSwitcher({ activeRole, roles }: ProfileSwitcherProps) {
               >
                 <RoleIcon role={role} />
                 <span>{role}</span>
-                {active ? <CheckIcon /> : null}
+                {active ? <Check aria-hidden="true" className="profile-check" size={20} strokeWidth={2} /> : null}
               </button>
             );
           })}
@@ -66,53 +67,15 @@ export function ProfileSwitcher({ activeRole, roles }: ProfileSwitcherProps) {
   );
 }
 
-function ChevronIcon() {
-  return (
-    <svg viewBox="0 0 20 20" aria-hidden="true">
-      <path d="m6 8 4 4 4-4" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg className="profile-check" viewBox="0 0 20 20" aria-hidden="true">
-      <path d="m5 10 3 3 7-7" />
-    </svg>
-  );
-}
-
 function RoleIcon({ role }: { role: Role }) {
   switch (role) {
     case "Administrador":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
-          <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-          <path d="M19 8v4" />
-          <path d="M21 10h-4" />
-        </svg>
-      );
+      return <UserRoundPlus aria-hidden="true" size={20} strokeWidth={2} />;
     case "Autoridad":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
-          <path d="m9 12 2 2 4-5" />
-        </svg>
-      );
+      return <ShieldCheck aria-hidden="true" size={20} strokeWidth={2} />;
     case "Operador":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
-          <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-        </svg>
-      );
+      return <UserRound aria-hidden="true" size={20} strokeWidth={2} />;
     case "Inspector":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8 4h8l1 2h3v15H4V6h3l1-2Z" />
-          <path d="m8 13 2 2 5-5" />
-        </svg>
-      );
+      return <ClipboardCheck aria-hidden="true" size={20} strokeWidth={2} />;
   }
 }

@@ -235,13 +235,13 @@ body {
 .login-copy-footer svg,
 .input-icon svg,
 .password-toggle svg {
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.9;
+  stroke-width: 2;
 }
 
 .login-copy-footer {
@@ -312,7 +312,7 @@ body {
 .input-icon {
   display: grid;
   place-items: center;
-  color: #4b5563;
+  color: #64748b;
 }
 
 .login-form input {
@@ -368,7 +368,7 @@ body {
 .password-toggle {
   display: grid;
   place-items: center;
-  color: #4b5563;
+  color: #64748b;
   padding: 6px;
 }
 
@@ -439,8 +439,8 @@ body {
 }
 
 .mobile-menu-trigger svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -524,8 +524,8 @@ body {
 }
 
 .mobile-drawer-header svg {
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -650,8 +650,8 @@ body {
 
 .nav-icon svg,
 .quick-icon svg {
-  width: 21px;
-  height: 21px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -685,13 +685,13 @@ body {
 }
 
 .security-note svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.9;
+  stroke-width: 2;
 }
 
 .sidebar-user {
@@ -751,8 +751,8 @@ body {
 }
 
 .logout-form svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -833,8 +833,8 @@ body {
 }
 
 .profile-pill svg {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -897,8 +897,8 @@ body {
 }
 
 .profile-menu .profile-check {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   justify-self: end;
 }
 
@@ -1025,9 +1025,9 @@ body {
 }
 
 .quick-icon svg {
-  width: 24px;
-  height: 24px;
-  color: var(--color-primary);
+  width: 20px;
+  height: 20px;
+  color: #1e40af;
 }
 
 .quick-card strong,
@@ -1235,8 +1235,8 @@ body {
 }
 
 .defect-search svg {
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -2420,13 +2420,13 @@ body {
 }
 
 .report-kpi-icon svg {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 1.8;
+  stroke-width: 2;
 }
 
 .report-grid {
@@ -4080,8 +4080,8 @@ tr:last-child td {
   }
 
   .report-kpi-icon svg {
-    width: 21px;
-    height: 21px;
+    width: 20px;
+    height: 20px;
   }
 
   .report-kpi-card strong {

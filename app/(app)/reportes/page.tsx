@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
+import { BusFront, CircleCheck, ClipboardList, TrendingUp, TriangleAlert } from "lucide-react";
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { canAccessModule, hasActiveRole } from "@/lib/access";
@@ -257,57 +258,22 @@ function MetricCard({
 
 function ReportIcon({ type }: { type: MetricIconType }) {
   if (type === "check") {
-    return (
-      <svg viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9" />
-        <path d="m8 12 3 3 5-6" />
-      </svg>
-    );
+    return <CircleCheck aria-hidden="true" size={20} strokeWidth={2} />;
   }
 
   if (type === "warning" || type === "alert") {
-    return (
-      <svg viewBox="0 0 24 24">
-        <path d="M12 3 2.8 20h18.4L12 3Z" />
-        <path d="M12 9v5" />
-        <path d="M12 17h.01" />
-      </svg>
-    );
+    return <TriangleAlert aria-hidden="true" size={20} strokeWidth={2} />;
   }
 
   if (type === "trend") {
-    return (
-      <svg viewBox="0 0 24 24">
-        <path d="M4 18V6" />
-        <path d="M4 18h16" />
-        <path d="m6 15 4-4 3 3 5-7" />
-        <path d="M18 7h-4" />
-        <path d="M18 7v4" />
-      </svg>
-    );
+    return <TrendingUp aria-hidden="true" size={20} strokeWidth={2} />;
   }
 
   if (type === "bus") {
-    return (
-      <svg viewBox="0 0 24 24">
-        <rect x="5" y="4" width="14" height="14" rx="2" />
-        <path d="M5 10h14" />
-        <path d="M8 20h1" />
-        <path d="M15 20h1" />
-        <path d="M8 14h.01" />
-        <path d="M16 14h.01" />
-      </svg>
-    );
+    return <BusFront aria-hidden="true" size={20} strokeWidth={2} />;
   }
 
-  return (
-    <svg viewBox="0 0 24 24">
-      <rect x="7" y="4" width="10" height="16" rx="2" />
-      <path d="M9 4h6" />
-      <path d="M10 9h4" />
-      <path d="M10 13h4" />
-    </svg>
-  );
+  return <ClipboardList aria-hidden="true" size={20} strokeWidth={2} />;
 }
 
 function ReportPanel({ children, title, wide = false }: { children: ReactNode; title: string; wide?: boolean }) {

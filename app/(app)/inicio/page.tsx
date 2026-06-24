@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
+import { ChevronRight, ClipboardCheck, Database, Plus, UserRoundPlus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { hasActiveRole, type SessionUser } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
@@ -222,7 +223,7 @@ function QuickAccessCard({
         <small>{description}</small>
       </span>
       <span className="quick-arrow" aria-hidden="true">
-        →
+        <ChevronRight aria-hidden="true" size={20} strokeWidth={2} />
       </span>
     </Link>
   );
@@ -251,37 +252,13 @@ function RecentInspectionsTable({
 function QuickIcon({ type }: { type: "admin" | "data" | "plus" | "checklist" }) {
   switch (type) {
     case "admin":
-      return (
-        <svg viewBox="0 0 24 24">
-          <path d="M16 21v-2a4 4 0 0 0-8 0v2" />
-          <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
-          <path d="M19 8v4" />
-          <path d="M21 10h-4" />
-        </svg>
-      );
+      return <UserRoundPlus aria-hidden="true" size={20} strokeWidth={2} />;
     case "data":
-      return (
-        <svg viewBox="0 0 24 24">
-          <path d="M4 6c0-1.1 3.6-2 8-2s8 .9 8 2-3.6 2-8 2-8-.9-8-2Z" />
-          <path d="M4 6v6c0 1.1 3.6 2 8 2s8-.9 8-2V6" />
-          <path d="M4 12v6c0 1.1 3.6 2 8 2s8-.9 8-2v-6" />
-        </svg>
-      );
+      return <Database aria-hidden="true" size={20} strokeWidth={2} />;
     case "plus":
-      return (
-        <svg viewBox="0 0 24 24">
-          <path d="M12 5v14" />
-          <path d="M5 12h14" />
-        </svg>
-      );
+      return <Plus aria-hidden="true" size={20} strokeWidth={2} />;
     case "checklist":
-      return (
-        <svg viewBox="0 0 24 24">
-          <path d="M8 4h8l1 2h3v15H4V6h3l1-2Z" />
-          <path d="m8 13 2 2 5-5" />
-          <path d="M8 18h8" />
-        </svg>
-      );
+      return <ClipboardCheck aria-hidden="true" size={20} strokeWidth={2} />;
   }
 }
 

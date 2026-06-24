@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
+import { LogOut, ShieldCheck } from "lucide-react";
 import { getNavigationForUser, getPrimaryRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
-import { AppIcon } from "./_components/app-icon";
 import { MobileMenu } from "./_components/mobile-menu";
 import { ProfileSwitcher } from "./_components/profile-switcher";
 import { SidebarNav } from "./_components/sidebar-nav";
@@ -54,12 +54,12 @@ export default async function AppLayout({
             </div>
             <form action="/api/logout" method="post" className="logout-form">
               <button type="submit">
-                <AppIcon name="logout" />
+                <LogOut aria-hidden="true" size={20} strokeWidth={2} />
                 <span>Cerrar Sesión</span>
               </button>
             </form>
             <div className="security-note desktop-security-note">
-              <AppIcon name="shield" />
+              <ShieldCheck aria-hidden="true" size={20} strokeWidth={2} />
               <span>Acceso seguro y confidencial.</span>
             </div>
           </div>

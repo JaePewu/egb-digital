@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { LogOut, Menu, ShieldCheck, X } from "lucide-react";
 import { getPrimaryRole, type NavigationItem, type Role, type SessionUser } from "@/lib/access";
-import { AppIcon } from "./app-icon";
 import { ProfileSwitcher } from "./profile-switcher";
 import { SidebarNav } from "./sidebar-nav";
 
@@ -38,7 +38,7 @@ export function MobileMenu({ initials, navigation, user }: MobileMenuProps) {
         aria-expanded={open}
         onClick={() => setOpen(true)}
       >
-        <AppIcon name="menu" />
+        <Menu aria-hidden="true" size={20} strokeWidth={2} />
       </button>
 
       {open ? (
@@ -51,7 +51,7 @@ export function MobileMenu({ initials, navigation, user }: MobileMenuProps) {
                 <span>Menú principal</span>
               </div>
               <button type="button" aria-label="Cerrar menú" onClick={() => setOpen(false)}>
-                <AppIcon name="close" />
+                <X aria-hidden="true" size={20} strokeWidth={2} />
               </button>
             </div>
 
@@ -60,7 +60,7 @@ export function MobileMenu({ initials, navigation, user }: MobileMenuProps) {
             <MobileUserBlock activeRole={user.activeRole} initials={initials} user={user} />
 
             <div className="security-note">
-              <AppIcon name="shield" />
+              <ShieldCheck aria-hidden="true" size={20} strokeWidth={2} />
               <span>Acceso seguro y confidencial.</span>
             </div>
           </aside>
@@ -97,7 +97,7 @@ function MobileUserBlock({
       </div>
       <form action="/api/logout" method="post" className="logout-form">
         <button type="submit">
-          <AppIcon name="logout" />
+          <LogOut aria-hidden="true" size={20} strokeWidth={2} />
           <span>Cerrar Sesión</span>
         </button>
       </form>
