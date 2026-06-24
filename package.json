@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
-    "vercel-build": "prisma db push && node scripts/seed.js --if-empty && next build --webpack",
+   "vercel-build": "prisma db push --accept-data-loss && node scripts/seed.js --if-empty && next build --webpack",
     "start": "next start",
     "db:push": "prisma db push",
     "db:seed": "node scripts/seed.js",
