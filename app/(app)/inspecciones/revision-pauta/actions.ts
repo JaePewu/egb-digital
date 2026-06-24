@@ -55,6 +55,14 @@ export async function saveRevisionPauta(formData: FormData) {
 
   const invalid = reviewed.some((item) => !applicableIds.has(item.id));
   if (invalid) redirectWithError("Uno o más ítems revisados no aplican al bus.", ppu);
+  const incompleteFailure = reviewed.find(
+    (item) =>
+      item.resultado === "No cumple" &&
+      (!item.observacion?.trim() || (!item.foto && !item.video)),
+  );
+  if (incompleteFailure) {
+    redirectWithError("Cada ítem No cumple requiere observación y al menos una evidencia.", ppu);
+  }
 
   const now = new Date();
   const inspectionId = buildId("INSP-RP", now);
@@ -182,7 +190,7 @@ export async function saveRevisionPauta(formData: FormData) {
     await tx.logActividad.create({ data: auditData });
   });
 
-  redirect(`/historial/${inspectionId}`);
+  redirect(`/historial/${inspectionId}?enviada=${encodeURIComponent("Revisión de pauta")}`);
 }
 
 function parseReviewedItems(raw: string) {

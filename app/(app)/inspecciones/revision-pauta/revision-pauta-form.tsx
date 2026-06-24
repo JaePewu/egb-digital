@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { SearchFeedback } from "../../_components/search-feedback";
 import { saveRevisionPauta } from "./actions";
 
@@ -44,6 +44,11 @@ type RevisionPautaFormProps = {
 export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPautaFormProps) {
   const [reviews, setReviews] = useState<Record<string, ItemReview>>({});
   const [clientError, setClientError] = useState("");
+  const [highlightedItem, setHighlightedItem] = useState("");
+  const itemRefs = useRef(new Map<string, HTMLElement>());
+  const observationRefs = useRef(new Map<string, HTMLTextAreaElement>());
+  const evidenceRefs = useRef(new Map<string, HTMLButtonElement>());
+  const highlightTimeout = useRef<number | null>(null);
 
   const answered = Object.keys(reviews).length;
   const pending = Math.max(pautaItems.length - answered, 0);
@@ -72,6 +77,7 @@ export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPauta
   }
 
   function updateReview(itemId: string, patch: Partial<ItemReview>) {
+    setClientError("");
     setReviews((current) => {
       const previous = current[itemId] ?? { resultado: "No cumple", observacion: "", foto: false, video: false };
       return {
@@ -101,7 +107,49 @@ export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPauta
     if (pending > 0) {
       event.preventDefault();
       setClientError(`Faltan ${pending} ítem(s) por responder antes de guardar.`);
+      const firstPending = pautaItems.find((item) => !reviews[item.id]);
+      if (firstPending) highlightIssue(firstPending.id, "result");
+      return;
     }
+
+    const missingObservation = pautaItems.find((item) => {
+      const review = reviews[item.id];
+      return review?.resultado === "No cumple" && !review.observacion.trim();
+    });
+    if (missingObservation) {
+      event.preventDefault();
+      setClientError("Agregue una observación al ítem marcado como No cumple.");
+      highlightIssue(missingObservation.id, "observation");
+      return;
+    }
+
+    const missingEvidence = pautaItems.find((item) => {
+      const review = reviews[item.id];
+      return review?.resultado === "No cumple" && !review.foto && !review.video;
+    });
+    if (missingEvidence) {
+      event.preventDefault();
+      setClientError("Agregue al menos una foto o video al ítem marcado como No cumple.");
+      highlightIssue(missingEvidence.id, "evidence");
+    }
+  }
+
+  function highlightIssue(itemId: string, field: "result" | "observation" | "evidence") {
+    setHighlightedItem(itemId);
+    if (highlightTimeout.current) window.clearTimeout(highlightTimeout.current);
+
+    window.requestAnimationFrame(() => {
+      itemRefs.current.get(itemId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => {
+        if (field === "observation") observationRefs.current.get(itemId)?.focus();
+        if (field === "evidence") evidenceRefs.current.get(itemId)?.focus();
+        if (field === "result") {
+          itemRefs.current.get(itemId)?.querySelector<HTMLButtonElement>(".pauta-review-options button")?.focus();
+        }
+      }, 450);
+    });
+
+    highlightTimeout.current = window.setTimeout(() => setHighlightedItem(""), 2800);
   }
 
   return (
@@ -170,7 +218,14 @@ export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPauta
                 const isFailed = review?.resultado === "No cumple";
 
                 return (
-                  <article className="pauta-review-item" key={item.id}>
+                  <article
+                    className={`pauta-review-item ${highlightedItem === item.id ? "validation-highlight" : ""}`}
+                    key={item.id}
+                    ref={(node) => {
+                      if (node) itemRefs.current.set(item.id, node);
+                      else itemRefs.current.delete(item.id);
+                    }}
+                  >
                     <div className="pauta-review-main">
                       <div className="pauta-review-number">{index + 1}</div>
                       <div className="pauta-review-copy">
@@ -218,7 +273,11 @@ export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPauta
                           <textarea
                             maxLength={200}
                             onChange={(event) => updateReview(item.id, { observacion: event.target.value })}
-                            placeholder="Agregue una observación opcional..."
+                            placeholder="Agregue una observación obligatoria..."
+                            ref={(node) => {
+                              if (node) observationRefs.current.set(item.id, node);
+                              else observationRefs.current.delete(item.id);
+                            }}
                             value={review.observacion}
                           />
                           <span>{review.observacion.length}/200</span>
@@ -226,6 +285,10 @@ export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPauta
                         <div className="evidence-actions">
                           <button
                             className={review.foto ? "evidence-active" : ""}
+                            ref={(node) => {
+                              if (node) evidenceRefs.current.set(item.id, node);
+                              else evidenceRefs.current.delete(item.id);
+                            }}
                             type="button"
                             onClick={() => updateReview(item.id, { foto: !review.foto })}
                           >

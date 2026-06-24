@@ -49,6 +49,12 @@ export async function saveDefectoPuntual(formData: FormData) {
 
   const pautaById = new Map(bus.pautaAplicable.map(({ pauta }) => [pauta.id, pauta]));
   const uniqueSelected = dedupeById(selected);
+  const incompleteDefect = uniqueSelected.find(
+    (defect) => !defect.observacion?.trim() || (!defect.foto && !defect.video),
+  );
+  if (incompleteDefect) {
+    redirectWithError("Cada defecto requiere observación y al menos una evidencia.", ppu);
+  }
   const selectedPauta = uniqueSelected.map((defect) => {
     const pauta = pautaById.get(defect.id);
     if (!pauta) redirectWithError("Uno o más defectos seleccionados no aplican al bus.", ppu);
@@ -153,7 +159,7 @@ export async function saveDefectoPuntual(formData: FormData) {
     await tx.logActividad.create({ data: auditData });
   });
 
-  redirect(`/historial/${inspectionId}`);
+  redirect(`/historial/${inspectionId}?enviada=${encodeURIComponent("Defectos puntuales")}`);
 }
 
 function parseSelectedDefects(raw: string) {

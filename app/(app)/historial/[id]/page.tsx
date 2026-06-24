@@ -7,6 +7,7 @@ import { SeverityBadge } from "../../_components/severity-badge";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionWhere } from "@/lib/inspection-access";
 import { saveInspectionResolution } from "./actions";
+import { InspectionSuccessOverlay } from "../../_components/inspection-success-overlay";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ type DetalleInspeccionPageProps = {
   }>;
   searchParams?: Promise<{
     sinCambios?: string;
+    enviada?: string;
   }>;
 };
 
@@ -62,6 +64,7 @@ export default async function DetalleInspeccionPage({ params, searchParams }: De
 
   return (
     <main className="module-shell inspection-detail-page">
+      {query?.enviada ? <InspectionSuccessOverlay inspectionType={query.enviada} /> : null}
       <section className="module-header defect-header">
         <p className="detail-breadcrumb">
           Historial de inspecciones &gt; {isResolutionTitle ? "Resolver inspección" : "Detalle de inspección"}

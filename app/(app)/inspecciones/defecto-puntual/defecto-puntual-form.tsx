@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { SearchFeedback } from "../../_components/search-feedback";
 import { saveDefectoPuntual } from "./actions";
 
@@ -47,6 +47,11 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
   const [criticidad, setCriticidad] = useState("");
   const [selected, setSelected] = useState<SelectedDefect[]>([]);
   const [clientError, setClientError] = useState("");
+  const [highlightedItem, setHighlightedItem] = useState("");
+  const itemRefs = useRef(new Map<string, HTMLElement>());
+  const observationRefs = useRef(new Map<string, HTMLTextAreaElement>());
+  const evidenceRefs = useRef(new Map<string, HTMLButtonElement>());
+  const highlightTimeout = useRef<number | null>(null);
 
   const elementos = useMemo(() => uniqueOptions(pautaItems.map((item) => item.elemento)), [pautaItems]);
   const atributos = useMemo(() => uniqueOptions(pautaItems.map((item) => item.atributo)), [pautaItems]);
@@ -87,6 +92,7 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
   }
 
   function updateItem(id: string, patch: Partial<SelectedDefect>) {
+    setClientError("");
     setSelected((current) => current.map((item) => (item.id === id ? { ...item, ...patch } : item)));
   }
 
@@ -107,7 +113,38 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
     if (selected.length === 0) {
       event.preventDefault();
       setClientError("Debe seleccionar al menos un defecto antes de guardar.");
+      return;
     }
+
+    const missingObservation = selected.find((item) => !item.observacion.trim());
+    if (missingObservation) {
+      event.preventDefault();
+      setClientError("Agregue una observación al defecto seleccionado.");
+      highlightIssue(missingObservation.id, "observation");
+      return;
+    }
+
+    const missingEvidence = selected.find((item) => !item.foto && !item.video);
+    if (missingEvidence) {
+      event.preventDefault();
+      setClientError("Agregue al menos una foto o video al defecto seleccionado.");
+      highlightIssue(missingEvidence.id, "evidence");
+    }
+  }
+
+  function highlightIssue(itemId: string, field: "observation" | "evidence") {
+    setHighlightedItem(itemId);
+    if (highlightTimeout.current) window.clearTimeout(highlightTimeout.current);
+
+    window.requestAnimationFrame(() => {
+      itemRefs.current.get(itemId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.setTimeout(() => {
+        if (field === "observation") observationRefs.current.get(itemId)?.focus();
+        if (field === "evidence") evidenceRefs.current.get(itemId)?.focus();
+      }, 450);
+    });
+
+    highlightTimeout.current = window.setTimeout(() => setHighlightedItem(""), 2800);
   }
 
   return (
@@ -255,7 +292,14 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
             ) : (
               <div className="selected-defects-list">
                 {selected.map((item, index) => (
-                  <article className="selected-defect-card" key={item.id}>
+                  <article
+                    className={`selected-defect-card ${highlightedItem === item.id ? "validation-highlight" : ""}`}
+                    key={item.id}
+                    ref={(node) => {
+                      if (node) itemRefs.current.set(item.id, node);
+                      else itemRefs.current.delete(item.id);
+                    }}
+                  >
                     <header>
                       <span>{index + 1}</span>
                       <div>
@@ -286,7 +330,11 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
                         <textarea
                           maxLength={200}
                           onChange={(event) => updateItem(item.id, { observacion: event.target.value })}
-                          placeholder="Agregue una observación..."
+                          placeholder="Agregue una observación obligatoria..."
+                          ref={(node) => {
+                            if (node) observationRefs.current.set(item.id, node);
+                            else observationRefs.current.delete(item.id);
+                          }}
                           value={item.observacion}
                         />
                         <span>{item.observacion.length}/200</span>
@@ -297,6 +345,10 @@ export function DefectoPuntualForm({ bus, error, pautaItems, ppu }: DefectoPuntu
                         <div className="evidence-actions">
                           <button
                             className={item.foto ? "evidence-active" : ""}
+                            ref={(node) => {
+                              if (node) evidenceRefs.current.set(item.id, node);
+                              else evidenceRefs.current.delete(item.id);
+                            }}
                             type="button"
                             onClick={() => updateItem(item.id, { foto: !item.foto })}
                           >
