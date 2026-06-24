@@ -6,6 +6,7 @@ import { canAccessModule, hasActiveRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
+import { SearchFeedback } from "../_components/search-feedback";
 import { markNotificationReviewed } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -191,6 +192,17 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
           <button type="submit">Buscar</button>
         </div>
       </form>
+
+      {hasNotificationSearch(filters) ? (
+        <SearchFeedback
+          message={
+            total > 0
+              ? `${total} notificación(es) encontrada(s).`
+              : "No se encontraron notificaciones para la búsqueda."
+          }
+          status={total > 0 ? "success" : "empty"}
+        />
+      ) : null}
 
       <section className="notifications-table-card">
         <div className="table-wrap">
@@ -415,6 +427,11 @@ function normalizeFilters(params?: Record<string, string | string[] | undefined>
     page: getParam(params, "page"),
     notificacion: getParam(params, "notificacion"),
   };
+}
+
+function hasNotificationSearch(filters: ReturnType<typeof normalizeFilters>) {
+  const { page: _page, notificacion: _notification, ...searchFilters } = filters;
+  return Object.values(searchFilters).some(Boolean);
 }
 
 function getParam(params: Record<string, string | string[] | undefined> | undefined, key: string) {

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { SearchFeedback } from "../_components/search-feedback";
 import { saveUserAdministration } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -88,6 +89,17 @@ export default async function AdministracionPage({ searchParams }: Administracio
           </button>
         </div>
       </div>
+
+      {hasAdminSearch(filters) ? (
+        <SearchFeedback
+          message={
+            usuarios.length > 0
+              ? `${usuarios.length} usuario(s) encontrado(s).`
+              : "No se encontraron usuarios para la búsqueda."
+          }
+          status={usuarios.length > 0 ? "success" : "empty"}
+        />
+      ) : null}
 
       {filters.guardado === "1" ? <p className="admin-success">Cambios guardados correctamente.</p> : null}
 
@@ -236,6 +248,10 @@ export default async function AdministracionPage({ searchParams }: Administracio
       </div>
     </main>
   );
+}
+
+function hasAdminSearch(filters: ReturnType<typeof normalizeFilters>) {
+  return Boolean(filters.q || filters.estado || filters.perfil);
 }
 
 function PermissionCard({

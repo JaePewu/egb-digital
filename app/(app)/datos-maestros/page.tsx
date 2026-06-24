@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { SearchFeedback } from "../_components/search-feedback";
 import { SeverityBadge } from "../_components/severity-badge";
 
 export const dynamic = "force-dynamic";
@@ -52,6 +53,8 @@ export default async function DatosMaestrosPage({ searchParams }: DatosMaestrosP
   const buses = tab === "buses" ? await getBuses(filters) : [];
   const pauta = tab === "pauta" ? await getPauta(filters) : [];
   const pautaAplicable = tab === "pauta-aplicable" ? await getPautaAplicable(filters) : [];
+  const masterResultCount =
+    tab === "buses" ? buses.length : tab === "pauta" ? pauta.length : tab === "pauta-aplicable" ? pautaAplicable.length : 0;
 
   return (
     <main className="module-shell master-page">
@@ -67,6 +70,17 @@ export default async function DatosMaestrosPage({ searchParams }: DatosMaestrosP
           </Link>
         ))}
       </nav>
+
+      {hasMasterSearch(filters) ? (
+        <SearchFeedback
+          message={
+            masterResultCount > 0
+              ? `${masterResultCount} registro(s) encontrado(s).`
+              : "No se encontraron registros para la búsqueda."
+          }
+          status={masterResultCount > 0 ? "success" : "empty"}
+        />
+      ) : null}
 
       {tab === "buses" ? (
         <section className="master-panel">
@@ -303,6 +317,19 @@ function normalizeFilters(params?: Record<string, string | string[] | undefined>
     criticidad: getParam(params, "criticidad"),
     aplica: getParam(params, "aplica"),
   };
+}
+
+function hasMasterSearch(filters: ReturnType<typeof normalizeFilters>) {
+  if (filters.tab === "buses") {
+    return Boolean(filters.ppu || filters.operador || filters.tecnologia || filters.tipoBus);
+  }
+  if (filters.tab === "pauta") {
+    return Boolean(filters.q || filters.elemento || filters.criticidad);
+  }
+  if (filters.tab === "pauta-aplicable") {
+    return Boolean(filters.ppu || filters.aplica);
+  }
+  return false;
 }
 
 function normalizeTab(value: string): MasterTab {

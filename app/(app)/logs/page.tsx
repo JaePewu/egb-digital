@@ -10,6 +10,7 @@ import {
 } from "@/lib/activity-log-query";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { SearchFeedback } from "../_components/search-feedback";
 
 export const dynamic = "force-dynamic";
 
@@ -112,6 +113,13 @@ export default async function LogsPage({ searchParams }: LogsPageProps) {
         </div>
       </form>
 
+      {hasLogSearch(filters) ? (
+        <SearchFeedback
+          message={total > 0 ? `${total} actividad(es) encontrada(s).` : "No se encontraron actividades para la búsqueda."}
+          status={total > 0 ? "success" : "empty"}
+        />
+      ) : null}
+
       <section className="logs-panel">
         <div className="section-heading">
           <h2>Registro de auditoría</h2>
@@ -203,6 +211,18 @@ async function getDistinctValues(field: "perfil" | "accion" | "modulo") {
     select: { [field]: true },
   });
   return rows.map((row) => row[field]).filter(Boolean);
+}
+
+function hasLogSearch(filters: ReturnType<typeof normalizeActivityLogFilters>) {
+  return Boolean(
+    filters.desde ||
+      filters.hasta ||
+      filters.usuario ||
+      filters.perfil ||
+      filters.accion ||
+      filters.modulo ||
+      filters.resultado,
+  );
 }
 
 function formatDateTime(date: Date) {

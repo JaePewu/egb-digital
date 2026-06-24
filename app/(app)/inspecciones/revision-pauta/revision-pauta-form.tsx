@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { SearchFeedback } from "../../_components/search-feedback";
 import { saveRevisionPauta } from "./actions";
 
 type BusData = {
@@ -119,8 +120,13 @@ export function RevisionPautaForm({ bus, error, pautaItems, ppu }: RevisionPauta
             <span>Buscar bus</span>
           </button>
         </form>
-        {ppu && !bus ? <p className="defect-error">No se encontró un bus con la PPU ingresada.</p> : null}
-        {error ? <p className="defect-error">{error}</p> : null}
+        {error ? (
+          <SearchFeedback message={error} status="error" />
+        ) : ppu && bus ? (
+          <SearchFeedback message={`Bus ${bus.ppu} encontrado.`} status="success" />
+        ) : ppu ? (
+          <SearchFeedback message="No se encontró un bus con la PPU ingresada." status="empty" />
+        ) : null}
       </section>
 
       {bus ? <BusSummary bus={bus} /> : null}

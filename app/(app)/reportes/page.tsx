@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionWhere } from "@/lib/inspection-access";
+import { SearchFeedback } from "../_components/search-feedback";
 
 export const dynamic = "force-dynamic";
 
@@ -163,6 +164,17 @@ export default async function ReportesPage({ searchParams }: ReportesPageProps) 
           <button type="submit">Actualizar reporte</button>
         </div>
       </form>
+
+      {hasReportSearch(filters) ? (
+        <SearchFeedback
+          message={
+            inspecciones.length > 0
+              ? `${inspecciones.length} inspección(es) incluida(s) en el reporte.`
+              : "No se encontraron datos para los filtros seleccionados."
+          }
+          status={inspecciones.length > 0 ? "success" : "empty"}
+        />
+      ) : null}
 
       {inspecciones.length === 0 ? (
         <div className="empty-state report-empty">No hay datos para los filtros seleccionados.</div>
@@ -498,6 +510,10 @@ function normalizeFilters(params?: Record<string, string | string[] | undefined>
     criticidad: getParam(params, "criticidad"),
     estado: getParam(params, "estado"),
   };
+}
+
+function hasReportSearch(filters: ReturnType<typeof normalizeFilters>) {
+  return Object.values(filters).some(Boolean);
 }
 
 function getParam(params: Record<string, string | string[] | undefined> | undefined, key: string) {

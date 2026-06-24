@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionScopeText, getInspectionWhere } from "@/lib/inspection-access";
 import { InspectionsTable } from "../_components/inspections-table";
+import { SearchFeedback } from "../_components/search-feedback";
 
 export const dynamic = "force-dynamic";
 
@@ -148,6 +149,17 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
         </div>
       </form>
 
+      {hasHistorySearch(filters) ? (
+        <SearchFeedback
+          message={
+            inspecciones.length > 0
+              ? `${inspecciones.length} inspección(es) encontrada(s).`
+              : "No se encontraron inspecciones para la búsqueda."
+          }
+          status={inspecciones.length > 0 ? "success" : "empty"}
+        />
+      ) : null}
+
       <section className="recent-section">
         <div className="section-heading">
           <h2>Resultados</h2>
@@ -160,6 +172,10 @@ export default async function HistorialPage({ searchParams }: HistorialPageProps
       </section>
     </main>
   );
+}
+
+function hasHistorySearch(filters: ReturnType<typeof normalizeFilters>) {
+  return Object.values(filters).some(Boolean);
 }
 
 function normalizeFilters(params?: Record<string, string | string[] | undefined>) {
