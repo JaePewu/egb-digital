@@ -5204,6 +5204,21 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+.login-form input,
+.login-form input:focus,
+.login-form input:focus-visible,
+.login-form input:active,
+.login-form input:-webkit-autofill,
+.login-form input:-webkit-autofill:hover,
+.login-form input:-webkit-autofill:focus,
+.login-form input:-webkit-autofill:active {
+  appearance: none;
+  border: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 .login-submit:active,
 .defect-search button:active,
 .primary-action:active,
