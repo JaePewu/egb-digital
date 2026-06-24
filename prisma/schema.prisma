@@ -26,6 +26,7 @@ model Usuario {
   inspeccionesRealizadas  Inspeccion[]      @relation("inspector")
   inspeccionesResueltas   Inspeccion[]      @relation("operador_resolutor")
   logsActividad           LogActividad[]
+  alertasCriticasVistas   AlertaCriticaVista[]
 
   @@map("usuarios")
 }
@@ -166,8 +167,23 @@ model Inspeccion {
   defectos                    DefectoDetectado[]
   resultadosPauta             ResultadoPauta[]
   notificaciones              Notificacion[]
+  alertasCriticasVistas       AlertaCriticaVista[]
 
   @@map("inspecciones")
+}
+
+model AlertaCriticaVista {
+  id                String     @id @default(cuid())
+  usuarioId         String     @map("id_usuario")
+  perfil            String
+  inspeccionId      String     @map("id_inspeccion")
+  fechaNotificacion DateTime   @default(now()) @map("fecha_notificacion")
+  usuario           Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  inspeccion        Inspeccion @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, perfil, inspeccionId])
+  @@index([usuarioId, perfil, fechaNotificacion])
+  @@map("alertas_criticas_vistas")
 }
 
 model DefectoDetectado {
