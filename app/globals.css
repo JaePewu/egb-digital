@@ -3664,18 +3664,23 @@ tr:last-child td {
     position: sticky;
     top: 0;
     z-index: 90;
+    width: 100%;
     min-height: 50px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 36px;
     align-items: center;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: space-between;
+    gap: 8px;
     padding: 7px 10px;
+    padding-right: 56px;
+    overflow: visible;
   }
 
   .institutional-brand {
-    flex: 1 1 auto;
+    grid-column: 1;
+    width: 100%;
+    min-width: 0;
     gap: 8px;
-    max-width: calc(100% - 48px);
+    max-width: none;
     overflow: hidden;
   }
 
@@ -3704,9 +3709,15 @@ tr:last-child td {
 
   .mobile-menu-root {
     display: flex;
+    position: fixed;
+    top: 7px;
+    right: 10px;
+    z-index: 110;
     align-items: center;
-    flex: 0 0 auto;
     justify-content: flex-end;
+    width: 36px;
+    height: 36px;
+    margin: 0;
     min-width: 36px;
     visibility: visible;
   }
@@ -3722,6 +3733,11 @@ tr:last-child td {
     opacity: 1;
     padding: 8px;
     visibility: visible;
+  }
+
+  .mobile-menu-trigger svg {
+    display: block;
+    flex: 0 0 auto;
   }
 
   .institutional-header > p::before {
