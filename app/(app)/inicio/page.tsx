@@ -100,7 +100,7 @@ async function InspectorHome({ user }: { user: SessionUser }) {
 
   return (
     <main className="home-shell">
-      <HomeHero user={user} description="Aquí tienes tus accesos habilitados y tus inspecciones recientes." />
+      <HomeHero user={user} description="Aquí tienes un resumen de tus actividades y accesos principales." />
 
       <section className="home-section">
         <SectionHeading title="Accesos rápidos" />
@@ -178,7 +178,6 @@ async function OperationalHome({ user }: { user: SessionUser }) {
 function HomeHero({ user, description }: { user: SessionUser; description: string }) {
   return (
     <section className="home-hero">
-      <p className="eyebrow">Inicio {user.activeRole}</p>
       <h1>Bienvenido, {user.nombreCompleto}</h1>
       <p>{description}</p>
     </section>
