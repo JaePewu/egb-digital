@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { LogOut, ShieldCheck } from "lucide-react";
-import { getNavigationForUser, getPrimaryRole, hasActiveRole } from "@/lib/access";
+import { getNavigationForUser, getPrimaryRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
-import { CriticalAlerts } from "./_components/critical-alerts";
 import { MobileMenu } from "./_components/mobile-menu";
 import { ProfileSwitcher } from "./_components/profile-switcher";
 import { SidebarNav } from "./_components/sidebar-nav";
@@ -17,11 +16,9 @@ export default async function AppLayout({
 
   const navigation = getNavigationForUser(user);
   const initials = getInitials(user.nombreCompleto);
-  const showCriticalAlerts = hasActiveRole(user, "Operador") || hasActiveRole(user, "Autoridad");
 
   return (
     <div className="app-shell">
-      {showCriticalAlerts ? <CriticalAlerts /> : null}
       <header className="institutional-header app-header">
         <div className="institutional-brand">
           <img src="/assets/logo-bus.png" alt="Logo bus EGB Digital" />

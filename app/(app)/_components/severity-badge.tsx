@@ -28,6 +28,6 @@ function SeverityIcon({ severity }: { severity: "alta" | "media" | "baja" }) {
 function normalizeSeverity(value: string) {
   const normalized = value.toLowerCase();
   if (normalized === "alta") return { className: "alta" as const, label: "Alta" };
-  if (normalized === "media") return { className: "media" as const, label: "Mediana" };
+  if (normalized === "media") return { className: "media" as const, label: "Media" };
   return { className: "baja" as const, label: "Baja" };
 }
