@@ -39,12 +39,12 @@ export default async function AppLayout({
           <SidebarNav navigation={navigation} />
 
           <div className="sidebar-footer">
-            <div className="sidebar-user">
+            <div className="sidebar-user desktop-user-card">
               <div className="user-avatar" aria-hidden="true">
                 {initials}
               </div>
               <div className="sidebar-user-data">
-                <span className="user-name">{user.nombreCompleto}</span>
+                <span className="user-system-role">{getPrimaryRole(user)} del Sistema</span>
                 {user.roles.length > 1 ? (
                   <ProfileSwitcher activeRole={user.activeRole} roles={user.roles} />
                 ) : (

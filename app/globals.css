@@ -672,6 +672,57 @@ body {
   padding-top: 12px;
 }
 
+.desktop-sidebar .sidebar-footer {
+  gap: 14px;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.desktop-user-card {
+  min-height: 96px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  padding: 14px 16px;
+}
+
+.desktop-user-card .user-avatar {
+  width: 48px;
+  height: 48px;
+  background: #eef2f7;
+  font-size: 18px;
+}
+
+.desktop-user-card .sidebar-user-data {
+  justify-items: start;
+  gap: 8px;
+  text-align: left;
+}
+
+.user-system-role {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.desktop-user-card .profile-pill {
+  width: auto;
+  min-width: 76px;
+  min-height: 24px;
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: 11px;
+  padding: 4px 12px;
+}
+
+.desktop-user-card .sidebar-profile-form {
+  width: auto;
+}
+
 .security-note {
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr);
@@ -728,6 +779,14 @@ body {
   padding-top: 10px;
 }
 
+.desktop-sidebar .logout-form {
+  margin: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0;
+}
+
 .logout-form button {
   width: 100%;
   min-height: 38px;
@@ -745,9 +804,21 @@ body {
   padding: 8px 8px;
 }
 
+.desktop-sidebar .logout-form button {
+  min-height: 52px;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
 .logout-form button:hover {
   background: #fef2f2;
   filter: none;
+}
+
+.desktop-sidebar .desktop-security-note {
+  border-top: 0;
+  padding: 2px 12px 0;
 }
 
 .logout-form svg {
