@@ -1900,6 +1900,8 @@ body {
   display: grid;
   gap: 10px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding-right: 4px;
 }
 
@@ -5377,13 +5379,17 @@ textarea:focus-visible {
   place-items: center;
   background: rgba(15, 23, 42, 0.42);
   backdrop-filter: blur(2px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 20px;
 }
 
 .critical-alert-modal {
   width: min(720px, 100%);
-  max-height: min(780px, calc(100vh - 40px));
+  max-height: min(780px, calc(100dvh - 40px));
+  min-height: 0;
   display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 16px;
   overflow: hidden;
   border: 1px solid #cbd5e1;
@@ -5510,6 +5516,8 @@ textarea:focus-visible {
   display: grid;
   gap: 12px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   padding-right: 4px;
 }
 
@@ -5828,8 +5836,14 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .critical-alert-backdrop {
+    place-items: start center;
+    padding: 12px;
+  }
+
   .critical-alert-modal {
-    max-height: calc(100vh - 24px);
+    width: 100%;
+    max-height: calc(100dvh - 24px);
     padding: 15px;
   }
 
