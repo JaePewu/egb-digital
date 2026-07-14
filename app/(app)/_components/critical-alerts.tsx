@@ -87,7 +87,11 @@ export function CriticalAlerts() {
 
             <div className="critical-alert-detail-list">
               {modalAlerts.alertas.map((alerta) => (
-                <AlertDetail key={alerta.inspeccionId} alerta={alerta} />
+                <AlertDetail
+                  key={alerta.inspeccionId}
+                  alerta={alerta}
+                  onOpen={() => setModalAlerts(null)}
+                />
               ))}
             </div>
 
@@ -119,7 +123,13 @@ function AlertBlock({ className, label, total }: { className: "punctual" | "revi
   );
 }
 
-function AlertDetail({ alerta }: { alerta: CriticalAlertItem }) {
+function AlertDetail({
+  alerta,
+  onOpen,
+}: {
+  alerta: CriticalAlertItem;
+  onOpen: () => void;
+}) {
   const review = alerta.tipoInspeccion === "Revision de pauta";
   return (
     <article className={`critical-alert-detail ${review ? "review" : "punctual"}`}>
@@ -128,7 +138,9 @@ function AlertDetail({ alerta }: { alerta: CriticalAlertItem }) {
           <BellRing aria-hidden="true" size={18} strokeWidth={2} />
           <strong>{review ? "Revisión de pauta" : "Defectos puntuales"}</strong>
         </div>
-        <Link href={`/historial/${alerta.inspeccionId}`}>Ver inspección</Link>
+        <Link href={`/historial/${alerta.inspeccionId}`} onClick={onOpen}>
+          Ver inspección
+        </Link>
       </header>
       <dl>
         <div>

@@ -5390,13 +5390,13 @@ textarea:focus-visible {
   min-height: 0;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
-  gap: 16px;
+  gap: 20px;
   overflow: hidden;
   border: 1px solid #cbd5e1;
   border-radius: 14px;
   background: #ffffff;
   box-shadow: 0 30px 90px rgba(15, 23, 42, 0.3);
-  padding: 20px;
+  padding: 24px;
 }
 
 .critical-alert-modal > header,
@@ -5415,7 +5415,7 @@ textarea:focus-visible {
 
 .critical-alert-modal > header > div > svg {
   flex: 0 0 auto;
-  color: #dc2626;
+  color: var(--color-primary);
   margin-top: 2px;
 }
 
@@ -5448,7 +5448,7 @@ textarea:focus-visible {
 .critical-alert-blocks {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
 .critical-alert-block {
@@ -5514,21 +5514,21 @@ textarea:focus-visible {
 .critical-alert-detail-list {
   min-height: 0;
   display: grid;
-  gap: 12px;
+  gap: 16px;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  padding-right: 4px;
+  padding: 2px 8px 2px 2px;
 }
 
 .critical-alert-detail {
   display: grid;
-  gap: 12px;
+  gap: 16px;
   border: 1px solid #e2e8f0;
   border-left: 5px solid #f97316;
   border-radius: 10px;
   background: #ffffff;
-  padding: 14px;
+  padding: 18px;
 }
 
 .critical-alert-detail.review {
@@ -5558,7 +5558,7 @@ textarea:focus-visible {
 .critical-alert-detail dl {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px 16px;
+  gap: 14px 28px;
   margin: 0;
 }
 
@@ -5585,7 +5585,7 @@ textarea:focus-visible {
 
 .critical-alert-defects {
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .critical-alert-defects > strong {
@@ -5595,7 +5595,7 @@ textarea:focus-visible {
 
 .critical-alert-defects ul {
   display: grid;
-  gap: 7px;
+  gap: 9px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -5603,10 +5603,10 @@ textarea:focus-visible {
 
 .critical-alert-defects li {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   border-radius: 7px;
   background: #f8fafc;
-  padding: 8px 10px;
+  padding: 10px 12px;
 }
 
 .critical-alert-defects li span {
@@ -5623,6 +5623,8 @@ textarea:focus-visible {
 
 .critical-alert-modal > footer {
   justify-content: flex-end;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 18px;
 }
 
 .critical-alert-modal > footer .primary-action,
@@ -5844,7 +5846,8 @@ textarea:focus-visible {
   .critical-alert-modal {
     width: 100%;
     max-height: calc(100dvh - 24px);
-    padding: 15px;
+    gap: 16px;
+    padding: 18px;
   }
 
   .critical-alert-modal > footer,
