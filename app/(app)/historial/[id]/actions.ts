@@ -137,7 +137,13 @@ export async function saveInspectionResolution(formData: FormData) {
     await tx.logActividad.create({ data: auditData });
   });
 
-  redirect(`/historial/${inspeccion.id}`);
+  const resolutionParams = new URLSearchParams({
+    actualizacion: "guardada",
+    cantidad: String(changedUpdates.length),
+    resuelta: allRepaired ? "1" : "0",
+  });
+
+  redirect(`/historial/${inspeccion.id}?${resolutionParams.toString()}`);
 }
 
 function truncate(value: string, maxLength: number) {

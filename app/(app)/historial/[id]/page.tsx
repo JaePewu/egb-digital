@@ -8,6 +8,7 @@ import { getInspectionTypeLabel } from "@/lib/display-labels";
 import { getInspectionWhere } from "@/lib/inspection-access";
 import { saveInspectionResolution } from "./actions";
 import { InspectionSuccessOverlay } from "../../_components/inspection-success-overlay";
+import { SearchFeedback } from "../../_components/search-feedback";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,9 @@ type DetalleInspeccionPageProps = {
   searchParams?: Promise<{
     sinCambios?: string;
     enviada?: string;
+    actualizacion?: string;
+    cantidad?: string;
+    resuelta?: string;
   }>;
 };
 
@@ -61,10 +65,18 @@ export default async function DetalleInspeccionPage({ params, searchParams }: De
   const canResolve = hasActiveRole(user, "Operador") && user.permisos.operadorPuedeResolver && inspeccion.defectos.length > 0;
   const isResolutionTitle = canResolve;
   const defectIds = inspeccion.defectos.map((defecto) => defecto.id).join(",");
+  const updatedDefectCount = Number(query?.cantidad ?? "0");
+  const resolutionSavedMessage =
+    query?.resuelta === "1"
+      ? "Cambios guardados correctamente. Todos los defectos fueron reparados y la inspección quedó Resuelta."
+      : `Cambios guardados correctamente. Se ${updatedDefectCount === 1 ? "actualizó 1 defecto" : `actualizaron ${updatedDefectCount} defectos`}.`;
 
   return (
     <main className="module-shell inspection-detail-page">
       {query?.enviada ? <InspectionSuccessOverlay inspectionType={query.enviada} /> : null}
+      {query?.actualizacion === "guardada" ? (
+        <SearchFeedback message={resolutionSavedMessage} status="success" />
+      ) : null}
       <section className="module-header defect-header">
         <p className="detail-breadcrumb">
           Historial de inspecciones &gt; {isResolutionTitle ? "Resolver inspección" : "Detalle de inspección"}
