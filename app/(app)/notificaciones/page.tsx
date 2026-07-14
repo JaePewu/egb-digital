@@ -29,6 +29,8 @@ type NotificationWithRelations = Prisma.NotificacionGetPayload<{
         criticidadMasGrave: true;
         fechaHora: true;
         estado: true;
+        cantidadDefectos: true;
+        efectoInspeccion: true;
       };
     };
     bus: {
@@ -62,6 +64,8 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
             criticidadMasGrave: true,
             fechaHora: true,
             estado: true,
+            cantidadDefectos: true,
+            efectoInspeccion: true,
           },
         },
         bus: {
@@ -98,6 +102,8 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
                 criticidadMasGrave: true,
                 fechaHora: true,
                 estado: true,
+                cantidadDefectos: true,
+                efectoInspeccion: true,
               },
             },
             bus: {
@@ -239,7 +245,10 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
                       <NotificationStatus estado={notificacion.estado} />
                     </td>
                     <td>
-                      <Link className="text-link notification-detail-link" href={buildHref(filters, { notificacion: notificacion.id })}>
+                      <Link
+                        className="text-link notification-detail-link"
+                        href={buildHref(filters, { notificacion: notificacion.id })}
+                      >
                         <Eye aria-hidden="true" size={16} strokeWidth={2} />
                         Ver detalle
                       </Link>
@@ -255,7 +264,10 @@ export default async function NotificacionesPage({ searchParams }: Notificacione
             Mostrando {from} a {to} de {total} notificación(es)
           </span>
           <div>
-            <Link aria-disabled={currentPage <= 1} href={buildHref(filters, { page: String(Math.max(1, currentPage - 1)) })}>
+            <Link
+              aria-disabled={currentPage <= 1}
+              href={buildHref(filters, { page: String(Math.max(1, currentPage - 1)) })}
+            >
               Anterior
             </Link>
             <strong>{currentPage}</strong>
@@ -298,7 +310,12 @@ function NotificationModal({
 
   return (
     <div className="notification-modal-backdrop">
-      <section className="notification-modal" role="dialog" aria-modal="true" aria-labelledby="notification-title">
+      <section
+        className="notification-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="notification-title"
+      >
         <header>
           <h2 id="notification-title">
             Detalle de notificación
@@ -380,12 +397,18 @@ function NotificationModal({
 
         <div className="notification-modal-section">
           <h3>Asunto del correo</h3>
-          <div className="notification-mail-box">{hasSimulatedEmail ? (notification.asuntoCorreoSimulado ?? subject) : "Sin correo simulado"}</div>
+          <div className="notification-mail-box">
+            {hasSimulatedEmail
+              ? notification.asuntoCorreoSimulado ?? subject
+              : "Sin correo simulado"}
+          </div>
         </div>
 
         <div className="notification-modal-section">
           <h3>Cuerpo del mail</h3>
-          <div className="notification-mail-body">{hasSimulatedEmail ? (notification.cuerpoCorreoSimulado ?? body) : body}</div>
+          <div className="notification-mail-body">
+            {hasSimulatedEmail ? notification.cuerpoCorreoSimulado ?? body : body}
+          </div>
         </div>
 
         <div className="notification-modal-section">
@@ -450,13 +473,18 @@ function hasNotificationSearch(filters: ReturnType<typeof normalizeFilters>) {
   return Object.values(searchFilters).some(Boolean);
 }
 
-function getParam(params: Record<string, string | string[] | undefined> | undefined, key: string) {
+function getParam(
+  params: Record<string, string | string[] | undefined> | undefined,
+  key: string,
+) {
   const value = params?.[key];
   if (Array.isArray(value)) return value[0]?.trim() ?? "";
   return value?.trim() ?? "";
 }
 
-function buildScopeWhere(user: Awaited<ReturnType<typeof getCurrentUser>>): Prisma.NotificacionWhereInput {
+function buildScopeWhere(
+  user: Awaited<ReturnType<typeof getCurrentUser>>,
+): Prisma.NotificacionWhereInput {
   if (!user) return { id: "__sin_usuario__" };
   if (hasActiveRole(user, "Autoridad")) return {};
   if (hasActiveRole(user, "Operador")) {
@@ -502,26 +530,41 @@ function buildFilterOptions(
   }>,
 ) {
   return {
-    operadores: uniqueOptions(rows.map((row) => ({ value: row.bus.operadorId, label: row.operador }))),
-    responsables: uniqueOptions(rows.map((row) => ({ value: row.responsable ?? "", label: row.responsable ?? "" }))),
-    certificadores: uniqueOptions(rows.map((row) => ({ value: row.certificador ?? "", label: row.certificador ?? "" }))),
+    operadores: uniqueOptions(
+      rows.map((row) => ({ value: row.bus.operadorId, label: row.operador })),
+    ),
+    responsables: uniqueOptions(
+      rows.map((row) => ({ value: row.responsable ?? "", label: row.responsable ?? "" })),
+    ),
+    certificadores: uniqueOptions(
+      rows.map((row) => ({ value: row.certificador ?? "", label: row.certificador ?? "" })),
+    ),
     estados: uniqueOptions(rows.map((row) => ({ value: row.estado, label: row.estado }))),
   };
 }
 
 function uniqueOptions(options: FilterOption[]) {
-  return Array.from(new Map(options.filter((option) => option.value).map((option) => [option.value, option])).values()).sort(
-    (a, b) => a.label.localeCompare(b.label, "es"),
-  );
+  return Array.from(
+    new Map(
+      options
+        .filter((option) => option.value)
+        .map((option) => [option.value, option]),
+    ).values(),
+  ).sort((a, b) => a.label.localeCompare(b.label, "es"));
 }
 
-function buildHref(filters: ReturnType<typeof normalizeFilters>, overrides: Partial<Record<keyof ReturnType<typeof normalizeFilters>, string>>) {
+function buildHref(
+  filters: ReturnType<typeof normalizeFilters>,
+  overrides: Partial<Record<keyof ReturnType<typeof normalizeFilters>, string>>,
+) {
   const params = new URLSearchParams();
   const next = { ...filters, ...overrides, page: overrides.page ?? filters.page };
+
   for (const [key, value] of Object.entries(next)) {
     if (key === "page" && (!value || value === "1")) continue;
     if (value) params.set(key, value);
   }
+
   const query = params.toString();
   return query ? `/notificaciones?${query}` : "/notificaciones";
 }
@@ -541,7 +584,9 @@ function formatDateTime(date: Date) {
     minute: "2-digit",
     hour12: false,
   }).formatToParts(date);
+
   const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+
   return `${get("day")}-${get("month")}-${get("year")} ${get("hour")}:${get("minute")}`;
 }
 
