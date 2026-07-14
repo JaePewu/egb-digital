@@ -248,6 +248,8 @@ model Notificacion {
   correoAutoridadSimulado    String?    @map("correo_autoridad_simulado")
   asuntoCorreoSimulado       String?    @map("asunto_correo_simulado")
   cuerpoCorreoSimulado       String?    @map("cuerpo_correo_simulado")
+  correoSimuladoEnviado      Boolean    @default(false) @map("correo_simulado_enviado")
+  fechaCorreoSimulado        DateTime?  @map("fecha_correo_simulado")
   estado                     String
   bus                        Bus        @relation(fields: [ppu], references: [ppu])
   inspeccion                 Inspeccion @relation(fields: [inspeccionId], references: [id], onDelete: Cascade)

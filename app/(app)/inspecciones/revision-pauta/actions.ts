@@ -181,8 +181,10 @@ export async function saveRevisionPauta(formData: FormData) {
         correoAutoridadSimulado: shouldSendSimulatedEmail ? bus.correoAutoridadSimulado : null,
         asuntoCorreoSimulado: shouldSendSimulatedEmail ? `Registro revisión de pauta ${bus.ppu}` : null,
         cuerpoCorreoSimulado: shouldSendSimulatedEmail
-          ? `Se registró la inspección ${inspectionId} con ${failed.length} defecto(s).`
+          ? `Se registró la inspección ${inspectionId} para la PPU ${bus.ppu}, operador ${bus.operadorNombre}, con ${failed.length} defecto(s). Criticidad máxima: ${maxSeverity}. Efecto: ${getEfectoInspeccion(maxSeverity)}`
           : null,
+        correoSimuladoEnviado: shouldSendSimulatedEmail,
+        fechaCorreoSimulado: shouldSendSimulatedEmail ? now : null,
         estado: "Nueva",
       },
     });

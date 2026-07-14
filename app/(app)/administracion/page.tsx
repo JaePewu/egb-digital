@@ -1,19 +1,23 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
-import { Eye } from "lucide-react";
+import { Eye, Pencil, UserPlus } from "lucide-react";
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { canAccessModule } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { SearchFeedback } from "../_components/search-feedback";
-import { saveUserAdministration } from "./actions";
+import { createUserAdministration, saveUserAdministration } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 type AdministracionPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
+
+type UserWithOperators = Prisma.UsuarioGetPayload<{
+  include: { operadores: { include: { operador: true } } };
+}>;
 
 export default async function AdministracionPage({ searchParams }: AdministracionPageProps) {
   const user = await getCurrentUser();
@@ -28,25 +32,24 @@ export default async function AdministracionPage({ searchParams }: Administracio
     prisma.usuario.findMany({
       where,
       orderBy: { nombreCompleto: "asc" },
-      include: {
-        operadores: {
-          include: {
-            operador: true,
-          },
-        },
-      },
+      include: { operadores: { include: { operador: true } } },
     }),
     prisma.operador.findMany({ orderBy: { nombre: "asc" } }),
   ]);
 
-  const selectedUser = usuarios.find((item) => item.id === filters.usuario) ?? usuarios[0] ?? null;
-  const selectedOperatorIds = new Set(selectedUser?.operadores.map((item) => item.operadorId) ?? []);
+  const selectedUser = filters.usuario
+    ? await prisma.usuario.findUnique({
+        where: { id: filters.usuario },
+        include: { operadores: { include: { operador: true } } },
+      })
+    : usuarios[0] ?? null;
+  const isNew = filters.modo === "nuevo";
 
   return (
     <main className="module-shell admin-page">
       <section className="module-header">
         <h1>Administración</h1>
-        <p className="lead">Administra usuarios, perfiles, permisos y asignaciones operativas de la plataforma.</p>
+        <p className="lead">Crea, consulta y mantiene usuarios, perfiles, permisos y asignaciones operativas.</p>
       </section>
 
       <div className="admin-toolbar">
@@ -78,30 +81,22 @@ export default async function AdministracionPage({ searchParams }: Administracio
         </form>
 
         <div className="admin-actions">
-          <button type="button" disabled title="Simulado para MVP">
+          <Link className="admin-create-link" href="/administracion?modo=nuevo">
+            <UserPlus aria-hidden="true" size={17} />
             Nuevo usuario
-          </button>
-          <button type="button" disabled title="Simulado para MVP">
-            Descargar listado
-          </button>
-          <button type="button" disabled title="Simulado para MVP">
-            Cargar masivamente
-          </button>
+          </Link>
         </div>
       </div>
 
       {hasAdminSearch(filters) ? (
         <SearchFeedback
-          message={
-            usuarios.length > 0
-              ? `${usuarios.length} usuario(s) encontrado(s).`
-              : "No se encontraron usuarios para la búsqueda."
-          }
+          message={usuarios.length > 0 ? `${usuarios.length} usuario(s) encontrado(s).` : "No se encontraron usuarios para la búsqueda."}
           status={usuarios.length > 0 ? "success" : "empty"}
         />
       ) : null}
-
-      {filters.guardado === "1" ? <p className="admin-success">Cambios guardados correctamente.</p> : null}
+      {filters.error ? <SearchFeedback message={filters.error} status="error" /> : null}
+      {filters.guardado === "1" ? <SearchFeedback message="Usuario actualizado correctamente." status="success" /> : null}
+      {filters.creado === "1" ? <SearchFeedback message="Usuario creado correctamente." status="success" /> : null}
 
       <div className="admin-grid">
         <section className="admin-panel">
@@ -125,35 +120,23 @@ export default async function AdministracionPage({ searchParams }: Administracio
               </thead>
               <tbody>
                 {usuarios.length === 0 ? (
-                  <tr>
-                    <td colSpan={8}>No se encontraron usuarios para los filtros seleccionados.</td>
+                  <tr><td colSpan={8}>No se encontraron usuarios para los filtros seleccionados.</td></tr>
+                ) : usuarios.map((item) => (
+                  <tr className={selectedUser?.id === item.id && !isNew ? "is-selected" : ""} key={item.id}>
+                    <td><span className="user-cell"><span>{getInitials(item.nombreCompleto)}</span>{item.nombreCompleto}</span></td>
+                    <td>{item.correo}</td>
+                    <td><StatusBadge estado={item.estado} /></td>
+                    <td><RoleMark active={item.rolAdministrador} /></td>
+                    <td><RoleMark active={item.rolInspector} /></td>
+                    <td><RoleMark active={item.rolAutoridad} /></td>
+                    <td><RoleMark active={item.rolOperador} /></td>
+                    <td>
+                      <Link className="text-link" href={buildHref(filters, { usuario: item.id, modo: "", error: "", creado: "", guardado: "" })}>
+                        <Eye aria-hidden="true" size={16} strokeWidth={2} /> Ver detalle
+                      </Link>
+                    </td>
                   </tr>
-                ) : (
-                  usuarios.map((item) => (
-                    <tr className={selectedUser?.id === item.id ? "is-selected" : ""} key={item.id}>
-                      <td>
-                        <span className="user-cell">
-                          <span>{getInitials(item.nombreCompleto)}</span>
-                          {item.nombreCompleto}
-                        </span>
-                      </td>
-                      <td>{item.correo}</td>
-                      <td>
-                        <StatusBadge estado={item.estado} />
-                      </td>
-                      <td><RoleMark active={item.rolAdministrador} /></td>
-                      <td><RoleMark active={item.rolInspector} /></td>
-                      <td><RoleMark active={item.rolAutoridad} /></td>
-                      <td><RoleMark active={item.rolOperador} /></td>
-                      <td>
-                        <Link className="text-link" href={buildHref(filters, { usuario: item.id })}>
-                          <Eye aria-hidden="true" size={16} strokeWidth={2} />
-                          Ver detalle
-                        </Link>
-                      </td>
-                    </tr>
-                  ))
-                )}
+                ))}
               </tbody>
             </table>
           </div>
@@ -161,88 +144,15 @@ export default async function AdministracionPage({ searchParams }: Administracio
 
         <aside className="admin-panel permissions-panel">
           <div className="section-heading">
-            <h2>Detalle de permisos</h2>
+            <h2>{isNew ? "Crear usuario" : "Detalle y edición"}</h2>
+            {!isNew && selectedUser ? <Pencil aria-hidden="true" size={18} /> : null}
           </div>
-          {selectedUser ? (
-            <form action={saveUserAdministration} className="permissions-form">
-              <input name="usuarioId" type="hidden" value={selectedUser.id} />
-              <input name="returnTo" type="hidden" value={buildHref(filters, { usuario: selectedUser.id, guardado: "1" })} />
-
-              <div className="permissions-user">
-                <span>{getInitials(selectedUser.nombreCompleto)}</span>
-                <div>
-                  <strong>{selectedUser.nombreCompleto}</strong>
-                  <small>{selectedUser.correo}</small>
-                </div>
-                <label>
-                  Estado
-                  <select name="estado" defaultValue={selectedUser.estado}>
-                    <option value="Activo">Activo</option>
-                    <option value="Inactivo">Inactivo</option>
-                  </select>
-                </label>
-              </div>
-
-              <PermissionCard
-                help="Permite administrar usuarios, permisos y datos maestros."
-                name="rolAdministrador"
-                title="Perfil Administrador"
-                defaultChecked={selectedUser.rolAdministrador}
-              />
-
-              <PermissionCard
-                help="Permite registrar defectos puntuales y ejecutar revisiones de pauta."
-                name="rolInspector"
-                title="Perfil Inspector"
-                defaultChecked={selectedUser.rolInspector}
-              >
-                <label><input type="checkbox" name="inspectorDefectoPuntual" defaultChecked={selectedUser.inspectorDefectoPuntual} /> Defectos puntuales</label>
-                <label><input type="checkbox" name="inspectorRevisionPauta" defaultChecked={selectedUser.inspectorRevisionPauta} /> Revisión de pauta</label>
-              </PermissionCard>
-
-              <PermissionCard
-                help="Permite consultar información global, historial, notificaciones y reportes."
-                name="rolAutoridad"
-                title="Perfil Autoridad"
-                defaultChecked={selectedUser.rolAutoridad}
-              />
-
-              <PermissionCard
-                help="Permite consultar operadores asignados y gestionar reparaciones habilitadas."
-                name="rolOperador"
-                title="Perfil Operador"
-                defaultChecked={selectedUser.rolOperador}
-              >
-                <div className="operator-assignment">
-                  <span>Operadores asignados</span>
-                  <div>
-                    {operadores.map((operador) => (
-                      <label key={operador.id}>
-                        <input
-                          type="checkbox"
-                          name="operadores"
-                          value={operador.id}
-                          defaultChecked={selectedOperatorIds.has(operador.id)}
-                        />
-                        {operador.nombre}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <label>
-                  <input type="checkbox" name="operadorPuedeResolver" defaultChecked={selectedUser.operadorPuedeResolver} />
-                  Puede resolver defectos
-                </label>
-                <p className="admin-note">En MVP, este permiso aplica a nivel usuario.</p>
-              </PermissionCard>
-
-              <div className="admin-form-actions">
-                <Link className="secondary-action" href="/administracion">Cancelar</Link>
-                <button className="primary-action" type="submit">Guardar cambios</button>
-              </div>
-            </form>
+          {isNew ? (
+            <UserEditor action={createUserAdministration} operadores={operadores} />
+          ) : selectedUser ? (
+            <UserEditor action={saveUserAdministration} operadores={operadores} user={selectedUser} />
           ) : (
-            <div className="empty-state">Seleccione un usuario para revisar permisos.</div>
+            <div className="empty-state">Seleccione un usuario o cree uno nuevo.</div>
           )}
         </aside>
       </div>
@@ -250,34 +160,78 @@ export default async function AdministracionPage({ searchParams }: Administracio
   );
 }
 
-function hasAdminSearch(filters: ReturnType<typeof normalizeFilters>) {
-  return Boolean(filters.q || filters.estado || filters.perfil);
+function UserEditor({
+  action,
+  operadores,
+  user,
+}: {
+  action: (formData: FormData) => void | Promise<void>;
+  operadores: Array<{ id: string; nombre: string }>;
+  user?: UserWithOperators;
+}) {
+  const selectedOperatorIds = new Set(user?.operadores.map((item) => item.operadorId) ?? []);
+  return (
+    <form action={action} className="permissions-form admin-user-editor">
+      {user ? <input name="usuarioId" type="hidden" value={user.id} /> : null}
+
+      <div className="admin-user-fields">
+        <label>
+          Nombre completo <span aria-hidden="true">*</span>
+          <input name="nombreCompleto" required defaultValue={user?.nombreCompleto ?? ""} maxLength={160} />
+        </label>
+        <label>
+          Correo institucional <span aria-hidden="true">*</span>
+          <input name="correo" type="email" required defaultValue={user?.correo ?? ""} maxLength={200} />
+        </label>
+        <label>
+          {user ? "Nueva contraseña (opcional)" : "Contraseña *"}
+          <input name="contrasena" type="password" required={!user} minLength={6} autoComplete="new-password" />
+        </label>
+        <label>
+          Estado <span aria-hidden="true">*</span>
+          <select name="estado" required defaultValue={user?.estado ?? "Activo"}>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </label>
+      </div>
+
+      <PermissionCard help="Permite administrar usuarios, permisos, datos maestros y auditoría." name="rolAdministrador" title="Perfil Administrador" defaultChecked={user?.rolAdministrador ?? false} />
+      <PermissionCard help="Permite registrar defectos puntuales y ejecutar revisiones de pauta." name="rolInspector" title="Perfil Inspector" defaultChecked={user?.rolInspector ?? false}>
+        <label><input type="checkbox" name="inspectorDefectoPuntual" defaultChecked={user?.inspectorDefectoPuntual ?? false} /> Defectos puntuales</label>
+        <label><input type="checkbox" name="inspectorRevisionPauta" defaultChecked={user?.inspectorRevisionPauta ?? false} /> Revisión de pauta</label>
+      </PermissionCard>
+      <PermissionCard help="Permite consultar información global, historial, notificaciones y reportes." name="rolAutoridad" title="Perfil Autoridad" defaultChecked={user?.rolAutoridad ?? false} />
+      <PermissionCard help="Permite consultar operadores asignados y gestionar reparaciones habilitadas." name="rolOperador" title="Perfil Operador" defaultChecked={user?.rolOperador ?? false}>
+        <div className="operator-assignment">
+          <span>Operadores asignados</span>
+          <div>
+            {operadores.map((operador) => (
+              <label key={operador.id}>
+                <input type="checkbox" name="operadores" value={operador.id} defaultChecked={selectedOperatorIds.has(operador.id)} />
+                {operador.nombre}
+              </label>
+            ))}
+          </div>
+        </div>
+        <label><input type="checkbox" name="operadorPuedeResolver" defaultChecked={user?.operadorPuedeResolver ?? false} /> Puede resolver defectos</label>
+      </PermissionCard>
+
+      <p className="admin-note">Los campos marcados con * son obligatorios. El correo no puede repetirse.</p>
+      <div className="admin-form-actions">
+        <Link className="secondary-action" href="/administracion">Cancelar</Link>
+        <button className="primary-action" type="submit">{user ? "Guardar cambios" : "Crear usuario"}</button>
+      </div>
+    </form>
+  );
 }
 
-function PermissionCard({
-  children,
-  defaultChecked,
-  help,
-  name,
-  title,
-}: {
-  children?: ReactNode;
-  defaultChecked: boolean;
-  help: string;
-  name: string;
-  title: string;
-}) {
+function PermissionCard({ children, defaultChecked, help, name, title }: { children?: ReactNode; defaultChecked: boolean; help: string; name: string; title: string }) {
   return (
     <section className="permission-card">
       <header>
-        <div>
-          <h3>{title}</h3>
-          <p>{help}</p>
-        </div>
-        <label className="switch">
-          <input type="checkbox" name={name} defaultChecked={defaultChecked} />
-          <span />
-        </label>
+        <div><h3>{title}</h3><p>{help}</p></div>
+        <label className="switch"><input type="checkbox" name={name} defaultChecked={defaultChecked} /><span /></label>
       </header>
       {children ? <div className="permission-options">{children}</div> : null}
     </section>
@@ -285,63 +239,38 @@ function PermissionCard({
 }
 
 function StatusBadge({ estado }: { estado: string }) {
-  const active = estado === "Activo";
-  return <span className={`admin-status ${active ? "active" : "inactive"}`}>{estado}</span>;
+  return <span className={`admin-status ${estado === "Activo" ? "active" : "inactive"}`}>{estado}</span>;
 }
-
 function RoleMark({ active }: { active: boolean }) {
   return active ? <span className="role-mark active">✓</span> : <span className="role-mark">-</span>;
 }
-
 function normalizeFilters(params?: Record<string, string | string[] | undefined>) {
   return {
-    q: getParam(params, "q"),
-    estado: getParam(params, "estado"),
-    perfil: getParam(params, "perfil"),
-    usuario: getParam(params, "usuario"),
-    guardado: getParam(params, "guardado"),
+    q: getParam(params, "q"), estado: getParam(params, "estado"), perfil: getParam(params, "perfil"),
+    usuario: getParam(params, "usuario"), guardado: getParam(params, "guardado"), creado: getParam(params, "creado"),
+    error: getParam(params, "error"), modo: getParam(params, "modo"),
   };
 }
-
 function getParam(params: Record<string, string | string[] | undefined> | undefined, key: string) {
   const value = params?.[key];
-  if (Array.isArray(value)) return value[0]?.trim() ?? "";
-  return value?.trim() ?? "";
+  return Array.isArray(value) ? value[0]?.trim() ?? "" : value?.trim() ?? "";
 }
-
 function buildWhere(filters: ReturnType<typeof normalizeFilters>): Prisma.UsuarioWhereInput {
   const and: Prisma.UsuarioWhereInput[] = [];
-  if (filters.q) {
-    and.push({
-      OR: [
-        { nombreCompleto: { contains: filters.q } },
-        { correo: { contains: filters.q.toLowerCase() } },
-      ],
-    });
-  }
+  if (filters.q) and.push({ OR: [{ nombreCompleto: { contains: filters.q, mode: "insensitive" } }, { correo: { contains: filters.q.toLowerCase(), mode: "insensitive" } }] });
   if (filters.estado) and.push({ estado: filters.estado });
   if (filters.perfil === "Administrador") and.push({ rolAdministrador: true });
   if (filters.perfil === "Inspector") and.push({ rolInspector: true });
   if (filters.perfil === "Autoridad") and.push({ rolAutoridad: true });
   if (filters.perfil === "Operador") and.push({ rolOperador: true });
-  return and.length > 0 ? { AND: and } : {};
+  return and.length ? { AND: and } : {};
 }
-
+function hasAdminSearch(filters: ReturnType<typeof normalizeFilters>) { return Boolean(filters.q || filters.estado || filters.perfil); }
 function buildHref(filters: ReturnType<typeof normalizeFilters>, overrides: Partial<ReturnType<typeof normalizeFilters>>) {
   const params = new URLSearchParams();
   const next = { ...filters, ...overrides };
-  for (const [key, value] of Object.entries(next)) {
-    if (value) params.set(key, value);
-  }
+  for (const [key, value] of Object.entries(next)) if (value) params.set(key, value);
   const query = params.toString();
   return query ? `/administracion?${query}` : "/administracion";
 }
-
-function getInitials(value: string) {
-  return value
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
+function getInitials(value: string) { return value.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join(""); }

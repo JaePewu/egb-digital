@@ -150,8 +150,10 @@ export async function saveDefectoPuntual(formData: FormData) {
         correoAutoridadSimulado: shouldSendSimulatedEmail ? bus.correoAutoridadSimulado : null,
         asuntoCorreoSimulado: shouldSendSimulatedEmail ? `Registro defecto puntual ${bus.ppu}` : null,
         cuerpoCorreoSimulado: shouldSendSimulatedEmail
-          ? `Se registró la inspección ${inspectionId} con ${selectedPauta.length} defecto(s).`
+          ? `Se registró la inspección ${inspectionId} para la PPU ${bus.ppu}, operador ${bus.operadorNombre}, con ${selectedPauta.length} defecto(s). Criticidad máxima: ${maxSeverity}. Efecto: ${getEfectoInspeccion(maxSeverity)}`
           : null,
+        correoSimuladoEnviado: shouldSendSimulatedEmail,
+        fechaCorreoSimulado: shouldSendSimulatedEmail ? now : null,
         estado: "Nueva",
       },
     });

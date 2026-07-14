@@ -564,6 +564,10 @@ async function main() {
       correoAutoridadSimulado: text(row.correo_autoridad_simulado),
       asuntoCorreoSimulado: text(row.asunto_correo_simulado),
       cuerpoCorreoSimulado: text(row.cuerpo_correo_simulado),
+      correoSimuladoEnviado: requiredText(row.canal, "notificaciones.canal").toLowerCase().includes("correo simulado"),
+      fechaCorreoSimulado: requiredText(row.canal, "notificaciones.canal").toLowerCase().includes("correo simulado")
+        ? dateTime(row.fecha_hora)
+        : null,
       estado: requiredText(row.estado, "notificaciones.estado"),
     })),
   });

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { LogOut, ShieldCheck } from "lucide-react";
 import { getNavigationForUser, getPrimaryRole } from "@/lib/access";
 import { getCurrentUser } from "@/lib/auth";
+import { CriticalAlerts } from "./_components/critical-alerts";
 import { MobileMenu } from "./_components/mobile-menu";
 import { ProfileSwitcher } from "./_components/profile-switcher";
 import { SidebarNav } from "./_components/sidebar-nav";
@@ -19,6 +20,7 @@ export default async function AppLayout({
 
   return (
     <div className="app-shell">
+      <CriticalAlerts />
       <header className="institutional-header app-header">
         <div className="institutional-brand">
           <img src="/assets/logo-bus.png" alt="Logo bus EGB Digital" />

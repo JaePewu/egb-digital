@@ -5,10 +5,27 @@ import { hasActiveRole } from "@/lib/access";
 import { prisma } from "@/lib/db";
 import { getInspectionWhere } from "@/lib/inspection-access";
 
+export type CriticalAlertItem = {
+  inspeccionId: string;
+  ppu: string;
+  operador: string;
+  tipoInspeccion: string;
+  fecha: string;
+  hora: string;
+  efecto: string;
+  defectosAlta: Array<{
+    id: string;
+    elemento: string;
+    item: string;
+    criterio: string;
+  }>;
+};
+
 export type CriticalAlertBatch = {
   defectoPuntual: number;
   revisionPauta: number;
   total: number;
+  alertas: CriticalAlertItem[];
 };
 
 export function canReceiveCriticalAlerts(user: SessionUser) {
@@ -45,13 +62,21 @@ export async function consumeCriticalAlerts(user: SessionUser): Promise<Critical
       },
       select: {
         id: true,
+        ppu: true,
+        operadorNombre: true,
         tipoInspeccion: true,
+        fecha: true,
+        hora: true,
+        efectoInspeccion: true,
         defectos: {
           where: {
             criticidad: "Alta",
           },
           select: {
             id: true,
+            elemento: true,
+            item: true,
+            criterioEspecifico: true,
           },
         },
       },
@@ -68,17 +93,47 @@ export async function consumeCriticalAlerts(user: SessionUser): Promise<Critical
       skipDuplicates: true,
     });
 
-    const defectoPuntual = inspections
+    await tx.logActividad.create({
+      data: {
+        usuarioId: user.id,
+        usuarioNombre: user.nombreCompleto,
+        usuarioCorreo: user.correo,
+        perfil: user.activeRole,
+        accion: "Recepción de alerta crítica visual",
+        modulo: "Notificaciones",
+        resultado: "Éxito",
+        detalle: `Se notificaron ${inspections.length} inspección(es) nueva(s) con defectos de criticidad Alta.`,
+      },
+    });
+
+    const alertas: CriticalAlertItem[] = inspections.map((inspection) => ({
+      inspeccionId: inspection.id,
+      ppu: inspection.ppu,
+      operador: inspection.operadorNombre,
+      tipoInspeccion: inspection.tipoInspeccion,
+      fecha: inspection.fecha,
+      hora: inspection.hora,
+      efecto: inspection.efectoInspeccion ?? "Requiere atención prioritaria.",
+      defectosAlta: inspection.defectos.map((defecto) => ({
+        id: defecto.id,
+        elemento: defecto.elemento,
+        item: defecto.item,
+        criterio: defecto.criterioEspecifico,
+      })),
+    }));
+
+    const defectoPuntual = alertas
       .filter((inspection) => inspection.tipoInspeccion === "Defecto puntual")
-      .reduce((total, inspection) => total + inspection.defectos.length, 0);
-    const revisionPauta = inspections
+      .reduce((total, inspection) => total + inspection.defectosAlta.length, 0);
+    const revisionPauta = alertas
       .filter((inspection) => inspection.tipoInspeccion === "Revision de pauta")
-      .reduce((total, inspection) => total + inspection.defectos.length, 0);
+      .reduce((total, inspection) => total + inspection.defectosAlta.length, 0);
 
     return {
       defectoPuntual,
       revisionPauta,
       total: defectoPuntual + revisionPauta,
+      alertas,
     };
   });
 }
@@ -88,5 +143,6 @@ function emptyBatch(): CriticalAlertBatch {
     defectoPuntual: 0,
     revisionPauta: 0,
     total: 0,
+    alertas: [],
   };
 }

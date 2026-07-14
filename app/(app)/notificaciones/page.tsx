@@ -344,6 +344,22 @@ function NotificationModal({
               <dt>Criticidad más grave</dt>
               <dd>{notification.inspeccion.criticidadMasGrave}</dd>
             </div>
+            <div>
+              <dt>Cantidad de defectos</dt>
+              <dd>{notification.inspeccion.cantidadDefectos}</dd>
+            </div>
+            <div>
+              <dt>Efecto de la detección</dt>
+              <dd>{notification.inspeccion.efectoInspeccion ?? "Sin efecto informado"}</dd>
+            </div>
+            <div>
+              <dt>Evidencia de correo simulado</dt>
+              <dd>
+                {notification.correoSimuladoEnviado && notification.fechaCorreoSimulado
+                  ? `Registrado el ${formatDateTime(notification.fechaCorreoSimulado)}`
+                  : "No generado"}
+              </dd>
+            </div>
           </dl>
         </div>
 
@@ -364,12 +380,12 @@ function NotificationModal({
 
         <div className="notification-modal-section">
           <h3>Asunto del correo</h3>
-          <div className="notification-mail-box">{hasSimulatedEmail ? subject : "Sin correo simulado"}</div>
+          <div className="notification-mail-box">{hasSimulatedEmail ? (notification.asuntoCorreoSimulado ?? subject) : "Sin correo simulado"}</div>
         </div>
 
         <div className="notification-modal-section">
           <h3>Cuerpo del mail</h3>
-          <div className="notification-mail-body">{body}</div>
+          <div className="notification-mail-body">{hasSimulatedEmail ? (notification.cuerpoCorreoSimulado ?? body) : body}</div>
         </div>
 
         <div className="notification-modal-section">

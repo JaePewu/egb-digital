@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { BellRing, X } from "lucide-react";
+import { BellRing, BusFront, CalendarClock, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { CriticalAlertBatch } from "@/lib/critical-alerts";
+import type { CriticalAlertBatch, CriticalAlertItem } from "@/lib/critical-alerts";
 
 const POLL_INTERVAL_MS = 30_000;
 
@@ -62,7 +62,7 @@ export function CriticalAlerts() {
       {modalAlerts ? (
         <div className="critical-alert-backdrop">
           <section
-            className="critical-alert-modal"
+            className="critical-alert-modal critical-alert-modal-detailed"
             role="dialog"
             aria-modal="true"
             aria-labelledby="critical-alert-title"
@@ -72,7 +72,7 @@ export function CriticalAlerts() {
                 <BellRing aria-hidden="true" size={20} strokeWidth={2} />
                 <div>
                   <h2 id="critical-alert-title">Nuevas alertas de criticidad Alta</h2>
-                  <p>Se detectaron inspecciones nuevas que requieren atención.</p>
+                  <p>Se detectaron inspecciones nuevas que requieren atención prioritaria.</p>
                 </div>
               </div>
               <button type="button" aria-label="Cerrar alerta" onClick={() => setModalAlerts(null)}>
@@ -81,16 +81,14 @@ export function CriticalAlerts() {
             </header>
 
             <div className="critical-alert-blocks">
-              <AlertBlock
-                className="punctual"
-                label="Defectos puntuales"
-                total={modalAlerts.defectoPuntual}
-              />
-              <AlertBlock
-                className="review"
-                label="Revisión de pauta"
-                total={modalAlerts.revisionPauta}
-              />
+              <AlertBlock className="punctual" label="Defectos puntuales" total={modalAlerts.defectoPuntual} />
+              <AlertBlock className="review" label="Revisión de pauta" total={modalAlerts.revisionPauta} />
+            </div>
+
+            <div className="critical-alert-detail-list">
+              {modalAlerts.alertas.map((alerta) => (
+                <AlertDetail key={alerta.inspeccionId} alerta={alerta} />
+              ))}
             </div>
 
             <footer>
@@ -108,15 +106,7 @@ export function CriticalAlerts() {
   );
 }
 
-function AlertBlock({
-  className,
-  label,
-  total,
-}: {
-  className: "punctual" | "review";
-  label: string;
-  total: number;
-}) {
+function AlertBlock({ className, label, total }: { className: "punctual" | "review"; label: string; total: number }) {
   return (
     <article className={`critical-alert-block ${className}`}>
       <BellRing aria-hidden="true" size={20} strokeWidth={2} />
@@ -129,13 +119,53 @@ function AlertBlock({
   );
 }
 
+function AlertDetail({ alerta }: { alerta: CriticalAlertItem }) {
+  const review = alerta.tipoInspeccion === "Revision de pauta";
+  return (
+    <article className={`critical-alert-detail ${review ? "review" : "punctual"}`}>
+      <header>
+        <div>
+          <BellRing aria-hidden="true" size={18} strokeWidth={2} />
+          <strong>{review ? "Revisión de pauta" : "Defectos puntuales"}</strong>
+        </div>
+        <Link href={`/historial/${alerta.inspeccionId}`}>Ver inspección</Link>
+      </header>
+      <dl>
+        <div>
+          <dt><BusFront aria-hidden="true" size={15} /> PPU</dt>
+          <dd>{alerta.ppu}</dd>
+        </div>
+        <div>
+          <dt>Operador</dt>
+          <dd>{alerta.operador}</dd>
+        </div>
+        <div>
+          <dt><CalendarClock aria-hidden="true" size={15} /> Fecha y hora</dt>
+          <dd>{alerta.fecha} · {alerta.hora}</dd>
+        </div>
+        <div>
+          <dt>Efecto</dt>
+          <dd>{alerta.efecto}</dd>
+        </div>
+      </dl>
+      <div className="critical-alert-defects">
+        <strong>Defectos de criticidad Alta ({alerta.defectosAlta.length})</strong>
+        <ul>
+          {alerta.defectosAlta.map((defecto) => (
+            <li key={defecto.id}>
+              <span>{defecto.elemento} · {defecto.item}</span>
+              <small>{defecto.criterio}</small>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  );
+}
+
 async function fetchCriticalAlerts() {
   try {
-    const response = await fetch("/api/alertas-criticas", {
-      method: "POST",
-      cache: "no-store",
-    });
-
+    const response = await fetch("/api/alertas-criticas", { method: "POST", cache: "no-store" });
     if (!response.ok) return null;
     return (await response.json()) as CriticalAlertBatch;
   } catch {
@@ -145,10 +175,10 @@ async function fetchCriticalAlerts() {
 
 function mergeAlerts(current: CriticalAlertBatch | null, next: CriticalAlertBatch): CriticalAlertBatch {
   if (!current) return next;
-
   return {
     defectoPuntual: current.defectoPuntual + next.defectoPuntual,
     revisionPauta: current.revisionPauta + next.revisionPauta,
     total: current.total + next.total,
+    alertas: [...current.alertas, ...next.alertas],
   };
 }
